@@ -1,0 +1,5 @@
+exportPattern("^[[:alpha:]]+")
+importFrom("stats", "dist", "quantile", "sd")
+importFrom("utils", "read.table", "write.table")
+importFrom("raster", "extent", "unique")
+importFrom("sp", "CRS")

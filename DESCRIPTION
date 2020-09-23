@@ -1,0 +1,16 @@
+Package: blockdss
+Type: Package
+Title: Disease maps with block simulation
+Version: 0.1.0
+Authors@R:
+    person("Manuel", "Ribeiro", email = "manuel.ribeiro@tecnico.ulisboa.pt", role = c("aut", "cre"))
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: Disease mapping with block simulation (dss algortihm) generating simulations, median and uncertainty disease risk maps.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports:
+  data.table (>= 1.9.4),
+  raster,
+  rgdal,
+  sp
