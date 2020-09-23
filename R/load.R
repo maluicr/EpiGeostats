@@ -1,13 +1,13 @@
-#' Compute disease incidence rates (/10^4) and variance-error terms.
+#' Creates an disease incidence rates file to be read by dss.64.c.exe
 #'
-#' Function computes disease incidence rates (/10^4) and variance-error terms, by region.
+#' Function computes disease incidence rates and variance-error terms by region,
+#' and writes the result into a text file (.out) that is stored in `input` folder.
 #' As input you should provide a dataframe with disease cases, population size
-#' and cartesian coordinates by region.
-#' Columns should include the following data: id of region,
-#' x, y and z cartesian coordinates at regions mass center,
+#' and cartesian coordinates by region. Columns should include the following data:
+#' id of region, x, y and z cartesian coordinates at regions mass center,
 #' number of disease cases and population size by region.
 #
-#' @param dfobj string, dataframe name with covid19 data
+#' @param dfobj string, dataframe name with disease data
 #' @param oid character, fieldname for region id
 #' @param xx character, fieldname for x-coordinates
 #' @param yy character, fieldname for y-coordinates
@@ -15,22 +15,23 @@
 #' @param cases character, fieldname for number of cases
 #' @param pop character, fieldname for population size
 #' @param casesNA, numeric, an integer used to replace rows with cases = NA
-#' @param day character, string indicating the date (format 'yyyymmdd') of covid19 cases
+#' @param day character, string indicating the date (format 'yyyymmdd') of disease cases
+#' @param perhab numeric, an integer indicating how much the rate is multiplied for, to express the disease rate (e.g 10000 or 100000)
 
 #' @return The following list of objects:
 #' \item{rates}{dataframe; results containing id region, x,y,z coordinates, incidence rate, variance-error term and population by region}
-#' \item{mrisk}{numeric; estimated global risk (/10^4)}
+#' \item{mrisk}{numeric; estimated global risk (/`perhab`)}
 #' \item{file}{list characters; indicating the day of data collection, filename and root folder where text file is stored }
-#' \item{ssdpars}{list numeric; list of values to be passed to ssdpars()}
+#' \item{ssdpars}{list numeric; list of values to be passed to `ssdpars()`}
 
 #' @details The function also writes and stores a text file (.out). This file contains x, y, z and incidence rate by row (region) using GeoEAS file format.
 
 #' @export
 irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
-                  cases = NA, pop = NA, casesNA = 2, day = "20200301") {
+                  cases = NA, pop = NA, casesNA = 2, day = "20200301", perhab = 100000) {
 
   # rate per phab habitants
-  phab = 10^4
+  phab = perhab
 
   # index variables id, x, y, z, cases, risk pop
   ioid = grep(oid, colnames(dfobj))
@@ -258,9 +259,9 @@ blockfile = function (rateobj, gridimage, na.value = -999){
 #'
 #' Creates a mask file and writes the result into a text file (.out) that is stored in `input` folder.
 #' The text file (.out) stores values {-1,0} where -1 are assigned to nodata locations and 0 are assigned to nodes with values (id region).
-#' As input you should provide the name of list returned by funtion blockfile().
+#' As input you should provide the name of list returned by `blockfile()`.
 #'
-#' @param blockobj, string, name of list, output of function blockfile()
+#' @param blockobj, string, name of list, output of function `blockfile()`
 #'
 #' @return `maskfile()` also returns the following list of objects:
 #' \item{file}{list characters; indicating filename and root folder where text file is stored}
@@ -323,7 +324,7 @@ maskfile = function(blockobj){
 #'
 #' @return The function returns a list with the variance and semivariogram estimates weighted by population size at nlags:
 #' \item{weightsvar}{is the value of the weighted population variance}
-#' \item{semivar}{a dataframe with a vector of distances and a vector of experimental semivariogram values}
+#' \item{semivar}{a dataframe with a vector of distances, a vector of experimental semivariogram values and number of pairs}
 #'
 #' @export
 
@@ -343,8 +344,8 @@ varexp = function(dfobj, lag, nlags){
 
   # weighted sample variance for sill estimation
   # no ref about this sill estimation
-  # looked in goovaerts & cressie books, journel
-  # at end, used fortran code from mjp
+  # looked in goovaerts & cressie books, journel.
+  # at end, used an adapted fortran code from mjp.
 
   # create integer num & den to calc weighted sample var
   nwsv = 0
@@ -415,7 +416,7 @@ varexp = function(dfobj, lag, nlags){
 #' You should provide the experimental semivariogram, select a variogram model type and set the variogram parameters (nugget, range and sill).
 #' You may evaluate fit by visual inspection.
 
-#' @param varexp, string, name of object, output of function varexp()
+#' @param varexp, string, name of object, output of function `varexp()`
 #' @param mod, character, the variogram model type ('sph' or 'exp')
 #' @param nug, numeric, nugget-effect value of the variogram
 #' @param ran, numeric, range value of the variogram
@@ -453,13 +454,13 @@ varmodel = function (varexp, mod = c("exp","sph"), nug, ran , sill) {
 #' Creates a parameters file and generates the simulated maps
 #'
 #' Creates a parameters file (.par) and invokes dss.c.64.exe to run block simulation program and
-#' generate simulated map files (.out). As input you should provide name of list objects
+#' generate simulated map files (.out). As input you should provide name of objects
 #' and parameter values required for the simulation process.
 
-#' @param blockobj, string, name of list, output of function blockfile()
-#' @param maskobj, string, name of list, output of function maskfile()
-#' @param dfobj, string, name of list, output of function irates()
-#' @param varmobj, string, name of list, output of function varmodel()
+#' @param blockobj, string, name of list, output of function `blockfile()`
+#' @param maskobj, string, name of list, output of function `maskfile()`
+#' @param dfobj, string, name of list, output of function `irates()`
+#' @param varmobj, string, name of list, output of function `varmodel()`
 #' @param simulations, numeric, number of simulations
 #' @param nrbias, numeric, nr simulations for bias correction
 #' @param biascor, num vector, flag for (mean, variance) correction (yes = 1, no = 0)
@@ -869,14 +870,14 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
 #' and returns a list with simulated maps (rasterstack object),
 #' e-type and uncertainty maps (rasterlayers).
 
-#' @param blockobj, string,  name of list, output of function `blockfile()
-#' @param grids, if grids = true  saves simulated maps in 'native' raster package format .grd
-#' @param emaps, if emaps = true (default), saves e-type and uncertainty maps in format .grd
+#' @param blockobj, string,  name of list, output of function `blockfile()`
+#' @param grids, if grids = T  saves simulated maps in 'native' raster package format .grd
+#' @param emaps, if emaps = T (default), saves e-type and uncertainty maps in format .grd
 #'
 #' @return
 #' \item{simulations}{a rasterstack (package 'raster') where each layer is a simulation}
-#' \item{etype}{a rasterlayer representing median-etype map for covid-19 risk}
-#' \item{uncertainty}{a rasterlayer representing risk uncertainty map for covid-19}
+#' \item{etype}{a rasterlayer representing median-etype map for disease risk}
+#' \item{uncertainty}{a rasterlayer representing risk uncertainty map for disease risk}
 #'
 #' @details All .grd files are geographic (spatial) data in 'raster' format, and are stored in input folder.
 #'
