@@ -1,16 +1,17 @@
 Package: blockdss
 Type: Package
-Title: Disease maps with block simulation
+Title: Disease mapping with block simulation
 Version: 0.1.1
 Authors@R:
     person("Manuel", "Ribeiro", email = "manuel.ribeiro@tecnico.ulisboa.pt", role = c("aut", "cre"))
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: Disease mapping with block simulation (dss algortihm) generating simulations, median and uncertainty disease risk maps.
+Maintainer: Manuel Ribeiro <manuel.ribeiro@tecnico.ulisboa.pt>
+Description: The package provides functions to configure a file with parameters and arguments needed to invoke dss.c.64.exe and run block simulation program. The package is suited for disease mapping as it estimates population-weighted variograms in the kriging process. In a last step, geostatistical simulations, median and uncertainty disease risk maps are obtained. 
+Depends: R (>= 3.6.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports:
-  data.table (>= 1.9.4),
-  raster,
-  rgdal,
-  sp
+    data.table (>= 1.9.4),
+    raster,
+    rgdal,
+    sp
