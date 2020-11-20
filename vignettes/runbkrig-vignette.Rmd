@@ -1,5 +1,5 @@
 ---
-title: "Geostatistical disease risk mapping using runbkrig package"
+title: "Geostatistical disease risk mapping using blockdss package"
 author: Manuel  Ribeiro, CERENA-IST/UL
 output: rmarkdown::html_vignette
 toc: true
@@ -22,19 +22,19 @@ library(runbkrig)
 
 ## 1 Introduction
 
-This tutorial shows how to run block sequential simulation in R using `runbkrig` package for modeling the spatial distribution of a disease, as in Azevedo et al. 2020^[https://doi.org/10.1186/s12942-020-00221-5]. For that purpose we will follow an example using COVID-19 data where simulated risk maps, median risk map and risk uncertainty map are obtained in the end.
+This tutorial shows how to run block sequential simulation in R using `blockdss` package for modeling the spatial distribution of a disease, as in Azevedo et al. 2020^[https://doi.org/10.1186/s12942-020-00221-5]. For that purpose we will follow an example using COVID-19 data where simulated risk maps, median risk map and risk uncertainty map are obtained in the end.
 
-The `runbkrig` package provides the parameters and generate files to be read by an .exe program (dss.c.64.exe) performing block sequential simulation (using direct sequential simulation algorithm, Soares 2000^[https://doi.org/10.1023/A:1012246006212]).
+The `blockdss` package provides the parameters and generate files to be read by an .exe program (dss.c.64.exe) performing block sequential simulation (using direct sequential simulation algorithm, Soares 2000^[https://doi.org/10.1023/A:1012246006212]).
 
 ## 2 Before you start
 
 Some of the functions will require other functions available in external packages `raster` ($\ge 3.0.4$) and `data.table` ($\ge 1.12.8$). If not installed, these packages should be previously downloaded and installed from CRAN repositories.  
 
-Make sure to save the disease cases file in default (working) directory. Inside that directory create a folder called `input` and put the dss.c.64.exe inside.
+Make sure to save the COVID-19 cases file in default (working) directory. Inside that directory create a folder called `input` and put the dss.c.64.exe inside.
 
-## 3 `runbkrig` package
+## 3 `blockdss` package
 
-The `runbkrig` package provides functions to configure a file with parameters and arguments needed to invoke dss.c.64.exe and run block simulation program. The functions added to the package are: `irates()`, `blockfile()`, `maskfile()`, `varexp()`, `varmodel()`, `ssdpars()` and `outraster()`.
+The `blockdss` package provides functions to configure a file with parameters and arguments needed to invoke dss.c.64.exe and run block simulation program. The functions added to the package are: `irates()`, `blockfile()`, `maskfile()`, `varexp()`, `varmodel()`, `ssdpars()` and `outraster()`.
 
 ## 4 COVID-19 example
 
