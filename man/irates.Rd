@@ -2,7 +2,7 @@
 % Please edit documentation in R/load.R
 \name{irates}
 \alias{irates}
-\title{Compute disease incidence rates (/10^4) and variance-error terms.}
+\title{Compute disease incidence rates and variance-error terms.}
 \usage{
 irates(
   dfobj = NA,
@@ -13,7 +13,8 @@ irates(
   cases = NA,
   pop = NA,
   casesNA = 2,
-  day = "20200301"
+  day = NA,
+  perhab = 10^5
 )
 }
 \arguments{
@@ -34,16 +35,18 @@ irates(
 \item{casesNA, }{numeric, an integer used to replace rows with cases = NA}
 
 \item{day}{character, string indicating the date (format 'yyyymmdd') of covid19 cases}
+
+\item{perhab}{numeric, constant multiplying the rate (e.g 100000)}
 }
 \value{
 The following list of objects:
 \item{rates}{dataframe; results containing id region, x,y,z coordinates, incidence rate, variance-error term and population by region}
-\item{mrisk}{numeric; estimated global risk (/10^4)}
+\item{mrisk}{numeric; estimated global risk}
 \item{file}{list characters; indicating the day of data collection, filename and root folder where text file is stored }
 \item{ssdpars}{list numeric; list of values to be passed to ssdpars()}
 }
 \description{
-Function computes disease incidence rates (/10^4) and variance-error terms, by region.
+Function computes disease incidence rates and variance-error terms, by region.
 As input you should provide a dataframe with disease cases, population size
 and cartesian coordinates by region.
 Columns should include the following data: id of region,
