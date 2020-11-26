@@ -28,7 +28,7 @@
 
 #' @export
 irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
-                  cases = NA, pop = NA, casesNA = 2, day = "20200301", perhab = 100000) {
+                  cases = NA, pop = NA, casesNA = 2, day = NA, perhab = 10^5) {
 
   # rate per phab habitants
   phab = perhab
@@ -482,7 +482,7 @@ varmodel = function (varexp, mod = c("exp","sph"), nug, ran , sill) {
 #' @export
 
 ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 20, biascor = c(1,1),
-                    ndMin = 1, ndMax = 32, nodMax = 12, radius1, radius2, radius3 = 1, ktype = 0) {
+                    ndMin = 1, ndMax = 32, nodMax = 12, radius1, radius2, radius3 = 1, ktype = 1) {
 
   day = as.character(blockobj[["file"]]["day"])
   folder = as.character(blockobj[["file"]]["folder"])
