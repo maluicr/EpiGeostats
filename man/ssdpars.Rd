@@ -18,7 +18,7 @@ ssdpars(
   radius1,
   radius2,
   radius3 = 1,
-  ktype = 0
+  ktype = 1
 )
 }
 \arguments{
