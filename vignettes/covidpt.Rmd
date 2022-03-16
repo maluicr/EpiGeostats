@@ -1,0 +1,281 @@
+---
+title: "Geostatistical COVID‑19 infection risk maps with R"
+author: Manuel  Ribeiro, CERENA-IST/UL
+date: "September 3, 2020"
+
+output: pdf_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1 Introduction
+
+This tutorial shows how to run block sequential simulation with R to model the spatial distribution of a disease, as in Azevedo et al. 2020^[https://doi.org/10.1186/s12942-020-00221-5]. For that purpose we will follow an example using COVID-19 data where simulated risk maps, median risk map and risk uncertainty map are obtained in the end.
+
+The R code in this tutorial calculates parameters and generate files to be read by an .exe program (dss.c.64.exe) performing block sequential simulation (using direct sequential simulation algorithm, Soares 2000^[https://doi.org/10.1023/A:1012246006212]).
+
+## 2 Data and R code
+
+A set of functions written in R will generate the required files and call dss.c.64.exe for block sequential simulation.
+
+To run the code, you will need :
+
+- a COVID-19 datafile and,
+- a georeferenced grid with id region values at all simulation locations.
+
+## 3 Basic instructions
+
+Make sure to put all data and R functions in default (working) directory. Inside that directory create a folder called `input` and put the dss.c.64.exe inside.
+
+## 4 COVID-19 example
+
+For our example we will use a COVID-19 dataset for Portugal mainland with all cases notified to health authorities on 01/06/2020. The example is a step-by-step guide to obtain simulated risk maps of COVID-19, median risk map and risk uncertainty map. All tools needed - R functions, datasets and .exe - are available on github to reproduce example.
+
+### 4.1 Source functions
+
+Start by running the code via source. I created separate files for each function:
+```{r source-files, echo = T, results='hide'}
+source("f1_irates.R", echo = T)
+source("f2_blockfile.R", echo = T)
+source("f3_maskfile.R", echo = T)
+source("f4_varexp.R", echo = T)
+source("f5_varmodel.R", echo = T)
+source("f6_ssdpars.R", echo = T)
+source("f7_outraster.R", echo = T)
+```
+
+### 4.2 Import COVID-19 data
+
+As input you should provide a data frame with id of region, x, y and z cartesian coordinates at region mass center, number of COVID-19 cases by region and population at risk by region. 
+
+Therefore we start by reading an ascii file with the COVID-19 data (available on github) and create a data frame from it.
+
+```{r covid-data}
+covid = read.table("covid19_data.txt", header = TRUE, sep = "\t", dec = ".")
+```
+
+```{r covid-data2}
+head(covid)
+str(covid)
+```
+You may see the dataset contains regions where number of cases are missing (id regions 3 and 4). These NA must be replaced by an integer, for kriging to run. Function `irates()` (next section) includes an argument to overcome this limitation. 
+
+### 4.3 Compute rates (/10^4) and variance-error terms with `irates()`
+
+Syntax:
+```{r, echo = F}
+str(args(irates))
+```
+
+Use `irates()` to compute rates (/10^4), variance-error terms by region.
+The arguments of the function are:
+
+- `dfobj`, string, dataframe name with COVID-19 data
+- `oid`, character, field name for region id
+- `xx`, character, field name for x-coordinates 
+- `yy`, character, field name for y-coordinates 
+- `zz`, character, field name for z-coordinates 
+- `cases`, character, field name for number of cases 
+- `pop`, character, field name for population size
+- `casesNA`, numeric, an integer used to replace rows with cases = NA,
+- `day`, character, string indicating date (format "yyyymmdd") of COVID-19 data
+
+```{r rates-var}
+rates = irates(dfobj = covid, oid = "id_region", xx = "xcoord", yy = "ycoord", zz = "zcoord", 
+               cases = "ncases", pop = "poprisk", casesNA = 2, day = "20200601")
+```
+
+The function `irates()` returns the following list of objects:
+```{r rates-var-return}
+str(rates)
+```
+
+It also writes a text file (.out) with rates and store it in `input` folder. 
+
+### 4.4 Create block data with `blockfile()`
+
+Syntax:
+```{r, echo = F}
+str(args(blockfile))
+```
+
+Use `blockfile()` to transform grid file in block format. The function requires some libraries to be loaded. If not installed they will be first installed.
+
+You should provide a georeferenced grid file with id region values at simulation locations.
+The arguments of the function are:
+
+- `rateobj`, string, name of list, output of function `irates()`. 
+- `gridimage`, character,  name of georeferenced grid file (e.g. tif) 
+- `na.value`, numeric, integer with grid value for "No data"  
+
+```{r block-data, warning = F, message = F}
+block = blockfile(rates, "grid2k.tif")
+```
+
+The grid file values should refer to the region id's at simulation locations (nodes). All regions in covid data should be represented by 1 or more node. 
+
+The function writes a text file (.out) with blockdata and store it in `input` folder. `blockfile()` also returns the following list of objects:
+
+```{r block-data-return}
+str(block, max.level = 2)
+```
+
+### 4.5 Create mask file with `maskfile()`
+
+Syntax:
+```{r, echo = F}
+str(args(maskfile))
+```
+
+The function `maskfile()` creates a mask for the block file. The only argument of the function is the name of list, output of function `blockfile()`.
+
+```{r mask-file}
+mask = maskfile(block)
+```
+
+Generates a file with values {-1,0} where -1 are assigned to nodata locations and 0 are assigned to nodes with values (id region). A text file (.out) with mask data is created and stored in `input` folder.
+
+```{r mask-file-return}
+str(mask)
+```
+
+### 4.6 Calculate experimental variogram with `varexp()`
+
+Syntax:
+```{r, echo = F}
+str(args(varexp))
+```
+
+Use `varexp()` to calculate experimental variogram from COVID-19 rates.
+Only implemented in omnidirectional case.
+The arguments are:
+
+- `dfobj`, string, name of list, output of function `irates()`
+- `lag`, numeric, the lag distance used for variogram estimates 
+- `nlags`, numeric, the number of lags to calculate variogram.
+
+```{r varexp}
+vexp = varexp(rates, lag = 7000, nlags = 15)
+```
+
+The function returns a list with the weighted variance (by population size) and variogram estimates at nlags.
+
+```{r varexp-str}
+str(vexp)
+```
+
+You may plot results to evaluate main structural patterns in the data:
+```{r varexp-plot}
+plot(vexp[["semivar"]], ylab = expression(paste(gamma, "(h)")), xlab = "h (in m)") 
+```
+
+### 4.7 Fit variogram model with `varmodel()`
+
+Syntax:
+```{r, echo = F}
+str(args(varmodel))
+```
+
+Funtion `varmodel()` fits (manually) a theoretical variogram. You should provide the experimental variogram data to evaluate fit by visual inspection, the variogram model type and the variogram parameters.
+The arguments of `varmodel()` are:
+
+- `varexp`, string, name of object, output of function varexp() 
+- `mod`, character, the variogram model type (available are: "Sph" or "Exp")
+- `nug`, numeric, nugget-effect value of the variogram
+- `ran`, numeric, range value of the variogram
+- `sill`, numeric, sill (or partial sill) value of the variogram
+
+```{r varmodel}
+vmod = varmodel(vexp, mod = "Exp", nug = 0, ran = 60000, sill = vexp[["weightsvar"]])
+```
+
+```{r varmodel-str}
+str(vmod)
+```
+
+```{r varmodel-plot}
+# plot experimental variogram
+plot(vexp[["semivar"]], ylab = expression(paste(gamma, "(h)")), xlab = "h (in m)") 
+# add sill
+abline(h = vexp[["weightsvar"]], col ="red", lty = 2)
+# add theoretical model
+lines(vmod[["fittedval"]]) 
+```
+
+### 4.8 Create parameters file with `ssdpars()` and calls dss.c.64.exe
+
+Syntax:
+```{r, echo = F}
+str(args(ssdpars))
+```
+
+Function `ssdpars()` writes the parameters file (.par) for .exe and runs block sequential simulations
+Function arguments are the names of objects returned above and parameter values for block-kriging and simulation processes: 
+
+- `blockobj`, string, name of list, output of function blockfile()
+- `maskobj`, string, name of list, output of function maskfile()
+- `dfobj`, string, name of list, output of function irates()
+- `varmobj`, string, name of list, output of function varmodel()
+- `simulations`, numeric, number of simulations
+- `nrbias`, numeric, nr simulations for bias correction
+- `biascor`, num vector, flag for (mean, variance) correction (yes = 1, no = 0)
+- `ndMin`, numeric, min number of neighbour observations used in  kriging
+- `ndMax`, numeric, max number of neighbour observations used in  kriging
+- `nodMax`, numeric, max number of previously simulated nodes used in  kriging
+- `radius1`, numeric, search radii in the major horizontal axe
+- `radius2`, numeric, search radii in the axe orthogonal (horizontal) to radius1
+- `radius3`, numeric, search radii in the vertical axe
+- `ktype`, numeric, the kriging type to be used (available are: 0 = simple, 1 = ordinary)
+
+```{r ssdir, eval = F}
+ssdpars(blockobj = block, maskobj = mask, dfobj = rates, varmobj = vmod, 
+        simulations = 5, radius1 = 60000, radius2 = 60000)
+```
+
+The function generates a text file (.par), calls dss.c.64.exe, run block simulations and returns the simulated maps (.out). This process may take a while depending mostly on the number of simulation nodes and  number of simulations. 
+
+Both text file (.par) and simulations files (.out) are stored in `input` folder.
+
+### 4.9 Obtain risk maps with `outraster()`.
+
+Syntax:
+```{r, echo = F}
+str(args(outraster))
+```
+
+Function `outraster()` read simulation files (.out) returned by `ssdpars()` and returns a list with simulated maps (rasterstack object), e-type and uncertainty maps (rasterlayers). 
+
+The arguments of the function:
+
+- `blockobj`, string,  name of list, output of function `blockfile()`,
+- if `grids = T`,  saves simulated maps in 'native' raster package format .grd,
+- if `emaps = T` (default), saves e-type and uncertainty maps in format .grd.
+
+All .grd (and respective .gri) files are stored in `input` folder.
+```{r outraster}
+maps = outraster(block)
+```
+
+```{r str}
+str(maps, max.level = 3)
+```
+You may plot results:
+```{r spplot sims }
+spplot(maps[["simulations"]])
+```
+
+```{r spplot etype}
+spplot(maps[["etype"]])
+```
+
+```{r spplot uncert}
+spplot(maps[["uncertainty"]])
+```
+
+## Acknowledgements
+
+Manuel Ribeiro acknowledges the financial support of the CERENA (project FCT-UIDB/04028/2020) and Fundação para a Ciencia e Tecnologia (research contract IF2018-CP1384). Manuel Ribeiro gratefully acknowledge CERENA-IST/UL researchers Leonardo Azevedo, Maria João Pereira and Amilcar Soares for the code in Matlab and Fortran.
+

@@ -15,3 +15,7 @@ Imports:
     raster,
     rgdal,
     sp
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr
