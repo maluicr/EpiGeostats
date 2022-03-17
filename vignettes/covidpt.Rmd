@@ -1,15 +1,23 @@
 ---
 title: "Geostatistical COVID‑19 infection risk maps with R"
-author: Manuel  Ribeiro, CERENA-IST/UL
-date: "September 3, 2020"
-
-output: pdf_document
+author: "Manuel Ribeiro"
+package: blockdss
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Geostatistical COVID‑19 infection risk maps with R}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
 ```
+
+
 
 ## 1 Introduction
 
@@ -34,17 +42,11 @@ Make sure to put all data and R functions in default (working) directory. Inside
 
 For our example we will use a COVID-19 dataset for Portugal mainland with all cases notified to health authorities on 01/06/2020. The example is a step-by-step guide to obtain simulated risk maps of COVID-19, median risk map and risk uncertainty map. All tools needed - R functions, datasets and .exe - are available on github to reproduce example.
 
-### 4.1 Source functions
+### 4.1 Library
 
 Start by running the code via source. I created separate files for each function:
 ```{r source-files, echo = T, results='hide'}
-source("f1_irates.R", echo = T)
-source("f2_blockfile.R", echo = T)
-source("f3_maskfile.R", echo = T)
-source("f4_varexp.R", echo = T)
-source("f5_varmodel.R", echo = T)
-source("f6_ssdpars.R", echo = T)
-source("f7_outraster.R", echo = T)
+library(blockdss)
 ```
 
 ### 4.2 Import COVID-19 data
@@ -53,14 +55,15 @@ As input you should provide a data frame with id of region, x, y and z cartesian
 
 Therefore we start by reading an ascii file with the COVID-19 data (available on github) and create a data frame from it.
 
-```{r covid-data}
-covid = read.table("covid19_data.txt", header = TRUE, sep = "\t", dec = ".")
+```{r covid-data,  eval = F}
+ptdata
 ```
 
 ```{r covid-data2}
-head(covid)
-str(covid)
+head(ptdata)
+str(ptdata)
 ```
+
 You may see the dataset contains regions where number of cases are missing (id regions 3 and 4). These NA must be replaced by an integer, for kriging to run. Function `irates()` (next section) includes an argument to overcome this limitation. 
 
 ### 4.3 Compute rates (/10^4) and variance-error terms with `irates()`
@@ -83,13 +86,13 @@ The arguments of the function are:
 - `casesNA`, numeric, an integer used to replace rows with cases = NA,
 - `day`, character, string indicating date (format "yyyymmdd") of COVID-19 data
 
-```{r rates-var}
-rates = irates(dfobj = covid, oid = "id_region", xx = "xcoord", yy = "ycoord", zz = "zcoord", 
-               cases = "ncases", pop = "poprisk", casesNA = 2, day = "20200601")
+```{r rates-var, eval = F}
+rates = irates(dfobj = blockdss::ptdata, oid = "oid_", xx = "x", yy = "y", zz = "t", 
+               cases = "ncases", pop = "pop19", casesNA = 1, day = "20210115")
 ```
 
 The function `irates()` returns the following list of objects:
-```{r rates-var-return}
+```{r rates-var-return, eval = F}
 str(rates)
 ```
 
@@ -111,7 +114,7 @@ The arguments of the function are:
 - `gridimage`, character,  name of georeferenced grid file (e.g. tif) 
 - `na.value`, numeric, integer with grid value for "No data"  
 
-```{r block-data, warning = F, message = F}
+```{r block-data, warning = F, message = F, eval = F}
 block = blockfile(rates, "grid2k.tif")
 ```
 
@@ -119,7 +122,7 @@ The grid file values should refer to the region id's at simulation locations (no
 
 The function writes a text file (.out) with blockdata and store it in `input` folder. `blockfile()` also returns the following list of objects:
 
-```{r block-data-return}
+```{r block-data-return, eval = F}
 str(block, max.level = 2)
 ```
 
@@ -132,13 +135,13 @@ str(args(maskfile))
 
 The function `maskfile()` creates a mask for the block file. The only argument of the function is the name of list, output of function `blockfile()`.
 
-```{r mask-file}
+```{r mask-file, eval = F}
 mask = maskfile(block)
 ```
 
 Generates a file with values {-1,0} where -1 are assigned to nodata locations and 0 are assigned to nodes with values (id region). A text file (.out) with mask data is created and stored in `input` folder.
 
-```{r mask-file-return}
+```{r mask-file-return, eval = F}
 str(mask)
 ```
 
@@ -157,18 +160,18 @@ The arguments are:
 - `lag`, numeric, the lag distance used for variogram estimates 
 - `nlags`, numeric, the number of lags to calculate variogram.
 
-```{r varexp}
+```{r varexp, eval = F}
 vexp = varexp(rates, lag = 7000, nlags = 15)
 ```
 
 The function returns a list with the weighted variance (by population size) and variogram estimates at nlags.
 
-```{r varexp-str}
+```{r varexp-str, eval = FALSE}
 str(vexp)
 ```
 
 You may plot results to evaluate main structural patterns in the data:
-```{r varexp-plot}
+```{r varexp-plot, eval = F}
 plot(vexp[["semivar"]], ylab = expression(paste(gamma, "(h)")), xlab = "h (in m)") 
 ```
 
@@ -188,15 +191,15 @@ The arguments of `varmodel()` are:
 - `ran`, numeric, range value of the variogram
 - `sill`, numeric, sill (or partial sill) value of the variogram
 
-```{r varmodel}
+```{r varmodel, eval = F}
 vmod = varmodel(vexp, mod = "Exp", nug = 0, ran = 60000, sill = vexp[["weightsvar"]])
 ```
 
-```{r varmodel-str}
+```{r varmodel-str, eval = F}
 str(vmod)
 ```
 
-```{r varmodel-plot}
+```{r varmodel-plot, eval = F}
 # plot experimental variogram
 plot(vexp[["semivar"]], ylab = expression(paste(gamma, "(h)")), xlab = "h (in m)") 
 # add sill
@@ -255,23 +258,23 @@ The arguments of the function:
 - if `emaps = T` (default), saves e-type and uncertainty maps in format .grd.
 
 All .grd (and respective .gri) files are stored in `input` folder.
-```{r outraster}
+```{r outraster, eval = F}
 maps = outraster(block)
 ```
 
-```{r str}
+```{r str, eval = F}
 str(maps, max.level = 3)
 ```
 You may plot results:
-```{r spplot sims }
+```{r spplot sims, eval = F }
 spplot(maps[["simulations"]])
 ```
 
-```{r spplot etype}
+```{r spplot etype, eval = F}
 spplot(maps[["etype"]])
 ```
 
-```{r spplot uncert}
+```{r spplot uncert, eval = F}
 spplot(maps[["uncertainty"]])
 ```
 
