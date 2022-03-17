@@ -4,11 +4,11 @@ An R package to run block direct sequential simulation with R to model the spati
 disease, as in Azevedo et al. 2020 (https://doi.org/10.1186/s12942-020-00221-5). For that purpose we will follow an example using COVID-19 data where
 simulated risk maps, median risk map and risk uncertainty map are obtained in the end.
 
-# data
+## data
 
 A set of functions written in R will generate the required files and call dss.c.64.exe for block sequential
 simulation. To run the code, you will need a disease dataset (data.frame) and a georeferenced grid with id region values at all simulation nodes (locations).
 
-# pre-requisites
+## pre-requisites
 
 In the default (working) directory, create a folder called input and put the dss.c.64.exe inside. This program runs the block simulation algorithm.
