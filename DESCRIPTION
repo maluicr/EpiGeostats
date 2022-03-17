@@ -1,13 +1,19 @@
 Package: blockdss
 Type: Package
-Title: Disease mapping with block simulation
+Title: Disease mapping with block direct sequential simulation
 Version: 0.1.1
 Authors@R:
-    person("Manuel", "Ribeiro", email = "manuel.ribeiro@tecnico.ulisboa.pt", role = c("aut", "cre"))
+    person(given = "Manuel", family = "Ribeiro", email = "manuel.ribeiro@tecnico.ulisboa.pt", role = c("aut", "cre"))
 Maintainer: Manuel Ribeiro <manuel.ribeiro@tecnico.ulisboa.pt>
-Description: The packages provides functions to configure a file with parameters and arguments needed to invoke dss.c.64.exe and run block simulation program. The package is suited for disease mapping as it estimates population-weighted variograms in the kriging process. In a last step, geostatistical simulations, median and uncertainty disease risk maps are obtained. 
+Description:  The packages provides functions to configure a file with parameters and arguments needed to invoke dss.c.64.exe.
+              Run block direct sequential simulation algortihm. The package is suited for disease mapping as 
+              it estimates population-weighted variograms in the kriging process. 
+              In a last step, geostatistical simulations, median and uncertainty disease risk maps are obtained.
+              A pixelated single-map combining median and associated interquartile range risks is available.
 Depends: R (>= 3.6.0)
 License: MIT + file LICENSE
+URL: https://github.com/maluicr/blockdss
+BugReports: https://github.com/maluicr/blockdss/issues
 Encoding: UTF-8
 LazyData: true
 Imports:
@@ -16,6 +22,10 @@ Imports:
     rgdal,
     sp
 Suggests: 
-    rmarkdown,
-    knitr
+    ggplot2 (>= 3.2.1),
+    markdown,
+    knitr (>= 1.24),
+    rmarkdown (>= 1.15)
+    
+RoxygenNote: 7.1.0
 VignetteBuilder: knitr
