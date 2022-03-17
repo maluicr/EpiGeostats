@@ -7,7 +7,4 @@ simulated risk maps, median risk map and risk uncertainty map are obtained in th
 # data
 
 A set of functions written in R will generate the required files and call dss.c.64.exe for block sequential
-simulation.
-To run the code, you will need :
-- a disease dataset (data.frame) and,
-- a georeferenced grid with id region values at all simulation nodes (locations).
+simulation. To run the code, you will need a disease dataset (data.frame) and a georeferenced grid with id region values at all simulation nodes (locations).
