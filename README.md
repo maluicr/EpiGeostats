@@ -11,4 +11,4 @@ simulation. To run the code, you will need a disease dataset (data.frame) and a 
 
 # pre-requisites
 
-In the default (working) directory, create a folder called input and put the dss.c.64.exe inside.
+In the default (working) directory, create a folder called input and put the dss.c.64.exe inside. This program runs the block simulation algorithm.
