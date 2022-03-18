@@ -1,12 +1,13 @@
 ---
 title: "Geostatistical COVID‑19 infection risk maps with R"
 author: "Manuel Ribeiro"
+date: "`r Sys.Date()`"
 package: blockdss
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Geostatistical COVID‑19 infection risk maps with R}
   %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
+  %\VignetteEncoding{UTF-8}
 ---
 
 
@@ -16,7 +17,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-
 
 
 ## 1 Introduction
