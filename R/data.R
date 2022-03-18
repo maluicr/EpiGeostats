@@ -1,32 +1,25 @@
-#' @title COVID-19 notification rate in Portugal mainland, 2022-01-15
-#' @description Refers to the 14-day notification rate per
-#' 100000 population of new COVID-19 cases in Portugal on 2022-01-15.
-#'
-#' @format A \code{"data.frame"} with 278 rows and 6 columns,
-#' refers to the 14-day notification rate per
-#' 100000 population of new COVID-19 cases in Portugal on 2022-01-15.
+#' @title ptdata dataset
+#' @description The ptdata dataset refers to a data.frame with the
+#' the 14-day cumulative incidence of covid-19 in Portugal
+#' on the 15th January 2021, by municipality. It contains geographic coordinates of
+#' municipalities (population-weighted centroids) and population at risk.
+#' This dataset can be used to follow the step-by-step guide
+#' to obtain block direct simulation risk maps of COVID-19,
+#' median risk map and spatial risk uncertainty map.
+#' @format A data.frame with 278 rows and 6 columns
 #' \describe{
 #'   \item{x}{x-coordinates, in meters}
 #'   \item{y}{y-coordinates, in meters}
 #'   \item{t}{z-coordinates, in meters}
-#'   \item{ncases}{number of cases}
+#'   \item{ncases}{number of new cases}
 #'   \item{oid_}{name for region id (municipality)}
-#'   \item{pop19}{population size}
+#'   \item{pop19}{population at risk}
 #' }
-#'
-#'
 #' @docType data
-#'
 #' @usage data(ptdata)
-#'
-#'
 #' @keywords datasets
-#'
 #' @references Azevedo, L. et al. Geostatistical COVID-19 infection risk maps for Portugal. Int J Health Geogr 19, 25 (2020).
-#' (\href{https://doi.org/10.1186/s12942-020-00221-5})
-#'
-#' @source \href{https://cerena.pt/projects/scope-spatial-data-sciences-covid-19-pandemic}{CERENA-IST/UL}
-#'
+#' @source Portuguese Directorate-General for Health (DGS). Data preparation by Manuel Ribeiro & Leonardo Azevedo (leonardo.azevedo@tecnico.ulisboa.pt).
 #' @examples
 #' data(ptdata)
 #' str(ptdata)

@@ -7,18 +7,19 @@
 outraster(blockobj, grids = F, emaps = T)
 }
 \arguments{
-\item{blockobj,}{string,  name of list, output of function blockfile()}
-\item{grids,}{if grids = T,  saves simulated maps in 'native' raster package format .grd}
-\item{emaps,}{if emaps = T (default), saves e-type and uncertainty maps in format .grd}
+\item{blockobj, }{string,  name of list, output of function `blockfile()`}
+
+\item{grids, }{if grids = T  saves simulated maps in 'native' raster package format .grd}
+
+\item{emaps, }{if emaps = T (default), saves e-type and uncertainty maps in format .grd}
 }
 \value{
-Function returns the following list of objects:
 \item{simulations}{a rasterstack (package 'raster') where each layer is a simulation}
-\item{etype}{a rasterlayer representing median-etype map for covid-19 risk}
-\item{uncertainty}{a rasterlayer representing risk uncertainty map for covid-19}
+\item{etype}{a rasterlayer representing median-etype map for disease risk}
+\item{uncertainty}{a rasterlayer representing risk uncertainty map for disease risk}
 }
 \description{
-Function read simulation files (.out) returned by \code{ssdpars()}
+Function read simulation files (.out) returned by `ssdpars()`
 and returns a list with simulated maps (rasterstack object),
 e-type and uncertainty maps (rasterlayers).
 }

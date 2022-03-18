@@ -2,7 +2,7 @@
 % Please edit documentation in R/load.R
 \name{irates}
 \alias{irates}
-\title{Compute disease incidence rates and variance-error terms.}
+\title{Creates an disease incidence rates file to be read by dss.64.c.exe}
 \usage{
 irates(
   dfobj = NA,
@@ -18,7 +18,7 @@ irates(
 )
 }
 \arguments{
-\item{dfobj}{string, dataframe name with covid19 data}
+\item{dfobj}{string, dataframe name with disease data}
 
 \item{oid}{character, fieldname for region id}
 
@@ -34,23 +34,23 @@ irates(
 
 \item{casesNA, }{numeric, an integer used to replace rows with cases = NA}
 
-\item{day}{character, string indicating the date (format 'yyyymmdd') of covid19 cases}
+\item{day}{character, string indicating the date (format 'yyyymmdd') of disease cases}
 
-\item{perhab}{numeric, constant multiplying the rate (e.g 100000)}
+\item{perhab}{numeric, an integer indicating how much the rate is multiplied for, to express the disease rate (e.g 10000 or 100000)}
 }
 \value{
 The following list of objects:
 \item{rates}{dataframe; results containing id region, x,y,z coordinates, incidence rate, variance-error term and population by region}
-\item{mrisk}{numeric; estimated global risk}
+\item{mrisk}{numeric; estimated global risk (/`perhab`)}
 \item{file}{list characters; indicating the day of data collection, filename and root folder where text file is stored }
-\item{ssdpars}{list numeric; list of values to be passed to ssdpars()}
+\item{ssdpars}{list numeric; list of values to be passed to `ssdpars()`}
 }
 \description{
-Function computes disease incidence rates and variance-error terms, by region.
+Function computes disease incidence rates and variance-error terms by region,
+and writes the result into a text file (.out) that is stored in `input` folder.
 As input you should provide a dataframe with disease cases, population size
-and cartesian coordinates by region.
-Columns should include the following data: id of region,
-x, y and z cartesian coordinates at regions mass center,
+and cartesian coordinates by region. Columns should include the following data:
+id of region, x, y and z cartesian coordinates at regions mass center,
 number of disease cases and population size by region.
 }
 \details{

@@ -5,7 +5,7 @@ Version: 0.1.1
 Authors@R:
     person(given = "Manuel", family = "Ribeiro", email = "manuel.ribeiro@tecnico.ulisboa.pt", role = c("aut", "cre"))
 Maintainer: Manuel Ribeiro <manuel.ribeiro@tecnico.ulisboa.pt>
-Description:  The packages provides functions to configure a file with parameters and arguments needed to invoke dss.c.64.exe.
+Description: The packages provides functions to configure a file with parameters and arguments needed to invoke dss.c.64.exe.
               Run block direct sequential simulation algortihm. The package is suited for disease mapping as 
               it estimates population-weighted variograms in the kriging process. 
               In a last step, geostatistical simulations, median and uncertainty disease risk maps are obtained.
@@ -26,5 +26,5 @@ Suggests:
     markdown,
     knitr (>= 1.24),
     rmarkdown (>= 1.15)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr

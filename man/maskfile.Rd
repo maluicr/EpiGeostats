@@ -7,15 +7,15 @@
 maskfile(blockobj)
 }
 \arguments{
-\item{blockobj, }{string, name of list, output of function blockfile()}
+\item{blockobj, }{string, name of list, output of function `blockfile()`}
 }
 \value{
-\code{maskfile()} also returns the following list of objects:
+`maskfile()` also returns the following list of objects:
 \item{file}{list characters; indicating filename and root folder where text file is stored}
 \item{zones}{list list of values to be passed to ssdpars()}
 }
 \description{
-Creates a mask file and writes the result into a text file (.out) that is stored in \code{input} folder.
+Creates a mask file and writes the result into a text file (.out) that is stored in `input` folder.
 The text file (.out) stores values {-1,0} where -1 are assigned to nodata locations and 0 are assigned to nodes with values (id region).
-As input you should provide the name of list returned by funtion blockfile().
+As input you should provide the name of list returned by `blockfile()`.
 }

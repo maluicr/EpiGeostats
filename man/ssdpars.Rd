@@ -22,13 +22,13 @@ ssdpars(
 )
 }
 \arguments{
-\item{blockobj, }{string, name of list, output of function blockfile()}
+\item{blockobj, }{string, name of list, output of function `blockfile()`}
 
-\item{maskobj, }{string, name of list, output of function maskfile()}
+\item{maskobj, }{string, name of list, output of function `maskfile()`}
 
-\item{dfobj, }{string, name of list, output of function irates()}
+\item{dfobj, }{string, name of list, output of function `irates()`}
 
-\item{varmobj, }{string, name of list, output of function varmodel()}
+\item{varmobj, }{string, name of list, output of function `varmodel()`}
 
 \item{simulations, }{numeric, number of simulations}
 
@@ -58,7 +58,7 @@ Function returns the following list of objects:
 }
 \description{
 Creates a parameters file (.par) and invokes dss.c.64.exe to run block simulation program and
-generate simulated map files (.out). As input you should provide name of list objects
+generate simulated map files (.out). As input you should provide name of objects
 and parameter values required for the simulation process.
 }
 \details{

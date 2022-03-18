@@ -7,7 +7,7 @@
 varmodel(varexp, mod = c("exp", "sph"), nug, ran, sill)
 }
 \arguments{
-\item{varexp, }{string, name of object, output of function varexp()}
+\item{varexp, }{string, name of object, output of function `varexp()`}
 
 \item{mod, }{character, the variogram model type ('sph' or 'exp')}
 

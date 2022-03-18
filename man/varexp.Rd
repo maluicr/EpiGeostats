@@ -7,14 +7,16 @@
 varexp(dfobj, lag, nlags)
 }
 \arguments{
-\item{dfobj }{string, name of list, output of function irates()}
-\item{lag }{numeric, the lag distance used for variogram estimates}
-\item{nlags }{numeric, the number of lags to calculate variogram}
+\item{dfobj, }{string, name of list, output of function irates()}
+
+\item{lag, }{numeric, the lag distance used for variogram estimates}
+
+\item{nlag, }{numeric, the number of lags to calculate variogram}
 }
 \value{
 The function returns a list with the variance and semivariogram estimates weighted by population size at nlags:
 \item{weightsvar}{is the value of the weighted population variance}
-\item{semivar}{a dataframe with a vector of distances and a vector of experimental semivariogram values}
+\item{semivar}{a dataframe with a vector of distances, a vector of experimental semivariogram values and number of pairs}
 }
 \description{
 Calculates population-weighted experimental semivariograms from disease incidence rates. For now is only implemented in omnidirectional case.

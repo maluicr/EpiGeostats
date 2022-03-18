@@ -14,14 +14,13 @@ blockfile(rateobj, gridimage, na.value = -999)
 \item{na.value, }{numeric, integer with grid value for "No data"}
 }
 \value{
-\code{blockfile()} also returns the following list of objects:
 \item{gridpars}{list parameters from georeferenced grid file: number rows and columns, resolution, (x,y), coordinates of the origin, NA value}
 \item{outgrid}{list vector node values, vector id of regions, and number of regions   }
 \item{file}{list characters; indicating the day of data collection, filename and root folder where text file is stored}
 \item{ingrid}{a rasterlayer object created from georeferenced grid file}
 }
 \description{
-Transforms a grid file in block format and writes the result into a text file (.out) that is stored in \code{input} folder.
+Transforms a grid file in block format and writes the result into a text file (.out) that is stored in `input` folder.
 As input you should provide a georeferenced grid file with id region values at simulation locations,
 and a list returned by funtion irates().
 }
