@@ -11,7 +11,7 @@ A data.frame with 278 rows and 6 columns
   \item{y}{y-coordinates, in meters}
   \item{t}{z-coordinates, in meters}
   \item{ncases}{number of new cases}
-  \item{oid_}{name for region id (municipality)}
+  \item{oid_}{number for region id (municipality id code)}
   \item{pop19}{population at risk}
 }
 }

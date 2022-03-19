@@ -12,7 +12,7 @@
 #'   \item{y}{y-coordinates, in meters}
 #'   \item{t}{z-coordinates, in meters}
 #'   \item{ncases}{number of new cases}
-#'   \item{oid_}{name for region id (municipality)}
+#'   \item{oid_}{number for region id (municipality id code)}
 #'   \item{pop19}{population at risk}
 #' }
 #' @docType data
@@ -24,3 +24,23 @@
 #' data(ptdata)
 #' str(ptdata)
 "ptdata"
+
+#' @title ptgrid dataset
+#' @description The ptgrid dataset refers to a data.frame with 22274 rows and 3 columns;
+#' a grid with 2 km x 2 km spacing that covers Portugal mainland.
+#'
+#' @format A data.frame with 22274 rows and 3 columns
+#' \describe{
+#'   \item{x}{x-coordinates, in meters}
+#'   \item{y}{y-coordinates, in meters}
+#'   \item{oid_}{number for region id (municipality id code)}
+#' }
+#' @docType data
+#' @usage data(ptgrid)
+#' @keywords datasets
+#' @references Azevedo, L. et al. Geostatistical COVID-19 infection risk maps for Portugal. Int J Health Geogr 19, 25 (2020).
+#' @source Data preparation by Manuel Ribeiro & Leonardo Azevedo (leonardo.azevedo@tecnico.ulisboa.pt).
+#' @examples
+#' data(ptgrid)
+#' str(ptgrid)
+"ptgrid"
