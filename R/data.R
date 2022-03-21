@@ -26,10 +26,12 @@
 "ptdata"
 
 #' @title ptgrid dataset
-#' @description The ptgrid dataset refers to a data.frame with 22274 rows and 3 columns;
-#' a grid with 2 km x 2 km spacing that covers Portugal mainland.
+#' @description The ptgrid dataset refers to a data.frame representing
+#' a rectangular grid with 2 km x 2 km spacing that covers Portugal mainland.
+#' All grid nodes with values not NA refer to the number of municipality id.
+#' Remaining grid nodes (on sea or Spain country) are set to NA value.
 #'
-#' @format A data.frame with 22274 rows and 3 columns
+#' @format A data.frame with 40608 rows and 3 columns
 #' \describe{
 #'   \item{x}{x-coordinates, in meters}
 #'   \item{y}{y-coordinates, in meters}
