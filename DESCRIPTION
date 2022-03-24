@@ -1,7 +1,7 @@
 Package: blockdss
 Type: Package
 Title: Disease mapping with block direct sequential simulation
-Version: 0.1.1
+Version: 0.2
 Authors@R:
     person(given = "Manuel", family = "Ribeiro", email = "manuel.ribeiro@tecnico.ulisboa.pt", role = c("aut", "cre"))
 Maintainer: Manuel Ribeiro <manuel.ribeiro@tecnico.ulisboa.pt>
@@ -20,9 +20,13 @@ Imports:
     data.table (>= 1.9.4),
     raster,
     rgdal,
-    sp
-Suggests: 
+    sp,
     ggplot2 (>= 3.2.1),
+    devtools,
+    pixelate,
+    maptools,
+    gpclib
+Suggests: 
     markdown,
     knitr (>= 1.24),
     rmarkdown (>= 1.15)
