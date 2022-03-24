@@ -4,14 +4,14 @@
 \alias{blockfile}
 \title{Function creates a block file to be read by dss.64.c.exe}
 \usage{
-blockfile(rateobj, gridimage, na.value = -999)
+blockfile(rateobj, gridimage, NAval = -999)
 }
 \arguments{
 \item{rateobj, }{string, name of list, output of function irates()}
 
 \item{gridimage, }{character,  name of georeferenced grid file (e.g. tif)}
 
-\item{na.value, }{numeric, integer with grid value for "No data"}
+\item{NAval, }{numeric, integer with grid value for "No data"}
 }
 \value{
 \item{gridpars}{list parameters from georeferenced grid file: number rows and columns, resolution, (x,y), coordinates of the origin, NA value}
