@@ -989,10 +989,10 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
 
    # additional libraries
    # library(maptools)
-   # if(!require(pixelate)){
-   #   devtools::install_github("aimeertaylor/pixelate")
-   #   library(pixelate)
-   # }
+   if(!require(pixelate)){
+     devtools::install_github("aimeertaylor/pixelate")
+     #library(pixelate)
+     }
    # if (!require(gpclib)) install.packages("gpclib", type="source")
    # gpclibPermit()
 
