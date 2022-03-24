@@ -11,7 +11,7 @@ varexp(dfobj, lag, nlags)
 
 \item{lag, }{numeric, the lag distance used for variogram estimates}
 
-\item{nlag, }{numeric, the number of lags to calculate variogram}
+\item{nlags, }{numeric, the number of lags to calculate variogram}
 }
 \value{
 The function returns a list with the variance and semivariogram estimates weighted by population size at nlags:
