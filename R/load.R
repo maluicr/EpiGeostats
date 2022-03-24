@@ -128,7 +128,7 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
 #'
 #' @param rateobj, string, name of list, output of function irates()
 #' @param gridimage, character,  name of georeferenced grid file (e.g. tif)
-#' @param na.value, numeric, integer with grid value for "No data"
+#' @param NAval, numeric, integer with grid value for "No data"
 #'
 #' @return
 #' \item{gridpars}{list parameters from georeferenced grid file: number rows and columns, resolution, (x,y), coordinates of the origin, NA value}
@@ -141,8 +141,7 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
 #'
 #' @importFrom(base, as.matrix)
 #' @export
-
-blockfile = function (rateobj, gridimage, na.value = -999){
+blockfile = function (rateobj, gridimage, NAval = -999){
 
   # strings w/ path to store files
   day = as.character(rateobj[["file"]]["day"])
@@ -160,7 +159,7 @@ blockfile = function (rateobj, gridimage, na.value = -999){
 
   # create matrix to store block coordinates
   matA = raster::as.matrix( grd, nrow = ny, ncol = nx )
-  matA2 = matrix(-999, nrow = ny, ncol = nx)
+  matA2 = matrix(NAval, nrow = ny, ncol = nx)
 
   # fill matrix with block coordinates
   for (i in 1:ny){
@@ -173,7 +172,7 @@ blockfile = function (rateobj, gridimage, na.value = -999){
   stacf = stac3$values
 
   # set NAs values
-  nas = na.value
+  nas = NAval
   stacf[is.na(stacf)] = nas
 
   # create array for blockfile
@@ -248,12 +247,11 @@ blockfile = function (rateobj, gridimage, na.value = -999){
     data.table::fwrite(blk_list, file = fblk, append = T, sep="\n")
   }
   listgrid = grd
-  listgridpars = list(nodes = c(nx, ny), resolution = c(resx, resy), origin = c(ox, oy), NAs = na.value)
+  listgridpars = list(nodes = c(nx, ny), resolution = c(resx, resy), origin = c(ox, oy), NAs = NAval)
   listfile = list(day = day, name = paste0(day, blk_nameO), folder = folder)
   listgridout = list(values = stacf, idblock = massid, nblock = massn)
   return(list(gridpars = listgridpars, outgrid = listgridout , file = listfile, ingrid = listgrid))
 }
-
 
 #' Function creates a mask file to be read by dss.64.c.exe
 #'
@@ -268,7 +266,6 @@ blockfile = function (rateobj, gridimage, na.value = -999){
 #' \item{zones}{list list of values to be passed to ssdpars()}
 #'
 #' @export
-
 maskfile = function(blockobj){
 
   obj = unlist(blockobj[["outgrid"]]["values"], use.names = F)
@@ -320,14 +317,13 @@ maskfile = function(blockobj){
 #'
 #' @param dfobj, string, name of list, output of function irates()
 #' @param lag, numeric, the lag distance used for variogram estimates
-#' @param nlag, numeric, the number of lags to calculate variogram
+#' @param nlags, numeric, the number of lags to calculate variogram
 #'
 #' @return The function returns a list with the variance and semivariogram estimates weighted by population size at nlags:
 #' \item{weightsvar}{is the value of the weighted population variance}
 #' \item{semivar}{a dataframe with a vector of distances, a vector of experimental semivariogram values and number of pairs}
 #'
 #' @export
-
 varexp = function(dfobj, lag, nlags){
 
   # store nr of observations
@@ -450,7 +446,6 @@ varmodel = function (varexp, mod = c("exp","sph"), nug, ran , sill) {
   return(list(structures = nstruc, parameters = pars, fittedval = model))
 }
 
-
 #' Creates a parameters file and generates the simulated maps
 #'
 #' Creates a parameters file (.par) and invokes dss.c.64.exe to run block simulation program and
@@ -480,7 +475,6 @@ varmodel = function (varexp, mod = c("exp","sph"), nug, ran , sill) {
 #' @details Both parameters file (.par) and simulations files (.out) are stored in input folder. Note that the simulation process may take a while, depending mostly on the number of simulation nodes and number of simulations specified.
 #'
 #' @export
-
 ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 20, biascor = c(1,1),
                     ndMin = 1, ndMax = 32, nodMax = 12, radius1, radius2, radius3 = 1, ktype = 1) {
 
@@ -899,6 +893,9 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
    lf = list.files(paste0(folder,"/"), pattern ="\\.out$")
    dss_list = list(simnames = Filter(function(x) grepl(simout, x), lf))
 
+   # store .out NA value
+   bNA <- as.integer(blockobj[["gridpars"]]["NAs"])
+
 
    # store number of simulations
    nsims = length(dss_list[["simnames"]])
@@ -910,7 +907,7 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
      print(dss_list[["simnames"]][k])
      out = read.table(file = paste0(folder, "/", dss_list[["simnames"]][k]), sep = " ", skip=3)
      out01 = as.data.frame(out)
-     out01[out01 == -999] <- NA
+     out01[out01 == bNA] <- NA
 
      # set grid size
      # mc : nr columns, mr : nr rows
@@ -964,3 +961,120 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
    return(listmaps)
    }
 
+ #' Creates a pixelated map
+ #'
+ #' This is a wrapper function calling R package `pixelate`^[https://github.com/aimeertaylor/pixelate]
+ #' developed by Aimee Taylor and colleagues ^[https://doi.org/10.48550/arXiv.2005.11993] that provides
+ #' implementation of incidence rate map with a visual representation of spatial uncertainty,
+ #' as a function of pixel size. The function also wraps functions from ggplot2 to provide a more elegant map.
+ #'
+ #' As input you should provide the result returned by `outraster()` or a list of `RasterLayer` objects
+ #' and additional arguments required for pixelation.
+ #
+ #' @param mapobj string, name of list, output of function `outraster()`
+ #' @param nbigk vector with length 2, specifies the minimum number of large pixels in the x and y directions, respectively.
+ #' @param bigk integer, specifies the number of average quantile intervals (i.e. number of different pixel sizes).
+ #' @param scaleft integer, specifies a factor (in units of observations) that features in either iterative multiplication or iterative exponentiation (see `scale_factor` arg in `pixelate::pixelate() for more details).
+
+ #' @importFrom pixelate pixelate
+ #' @importFrom ggplot2 ggplot
+ #'
+
+ #' @return `pxmap()` is used to map a spatially continuous disease risk
+ #' with varying pixel sizes, showing spatial uncertainty generated by the
+ #' block direct sequential simulation algorithm.
+
+ #' @export
+ pxmap <- function(mapobj = maps, nbigk = c(17, 17), bigk = 4, scaleft = 1){
+
+   # additional libraries
+   # library(maptools)
+   # if(!require(pixelate)){
+   #   devtools::install_github("aimeertaylor/pixelate")
+   #   library(pixelate)
+   # }
+   # if (!require(gpclib)) install.packages("gpclib", type="source")
+   # gpclibPermit()
+
+
+   # prepare blockdss() maps for pixelate()
+   px_u <- raster::as.data.frame(mapobj[["uncertainty"]], row.names=NULL, optional=FALSE, xy=T, na.rm = F)
+   px_m <- raster::as.data.frame(mapobj[["etype"]] , row.names=NULL, optional=FALSE, xy=T, na.rm = F)
+   px_in <- cbind(px_m, px_u[,3])
+   names(px_in) <- c("x", "y", "z", "u")
+
+   # Pixelate using default parameters
+   px_def <- pixelate(px_in, num_bigk_pix = nbigk, bigk = bigk, scale_factor = scaleft )
+
+   # Inspect list returned by pixelate
+   # str(px_def)
+
+   # Inspect a sample of uncertain pixelated predictions
+   uncertain_ind <- which(px_def$pix_df$u > 0)
+   head(px_def$pix_df[uncertain_ind, ])
+
+   # Plot pixelated map with ggplot
+   ggplot(px_def$pix_df) +
+     # Add raster surface
+     geom_raster(mapping = aes(x = x, y = y, fill = pix_z)) +
+
+     # Add gradient
+     scale_fill_viridis_c(name = paste("Median \n", "Incidence"), na.value = 'white') +
+
+     # Add axis labels
+     ylab('Y (meters)') +
+     xlab('X (meters)') +
+
+     # Ensure the plotting space is not expanded
+     coord_fixed(expand = FALSE) +
+
+     # Modify the legend and add a plot border:
+     theme(legend.justification = c(0, 0),
+           legend.background = element_rect(fill = NA),
+           legend.title = element_text(size = 8),
+           legend.text = element_text(size = 8))
+
+ }
+
+ #' Creates elegant median e-type/uncertainty maps
+ #'
+ #' The function wraps functions from ggplot2 to provide a more elegant map.
+ #'
+ #' As input you should provide the result returned by `outraster()` or a `RasterLayer` object.
+ #
+ #' @param mapobj string, name of list, output of function `outraster()`
+ #' @param mapvar character, specifies the minimum number of large pixels in the x and y directions, respectively.
+ #' @param legname character, specifies the number of average quantile intervals (i.e. number of different pixel sizes).
+
+ #' @return `spmap()` is used to map a spatially continuous disease risk
+ #' or spatial uncertainty generated by the block direct sequential simulation algorithm.
+
+ #' @export
+ spmap <- function(mapobj = maps, mapvar = c("etype","unc"), legname = "Incidence"){
+
+   m <- ifelse(mapvar == "etype", "etype", "uncertainty")
+
+   # prepare blockdss() maps for pixelate()
+   px_in <- raster::as.data.frame(mapobj[[m]], row.names=NULL, optional=FALSE, xy=T, na.rm = F)
+   names(px_in) <- c("x", "y", "z")
+
+   # Plot pixelated map with ggplot
+   ggplot(px_in) +
+     # Add raster surface
+     geom_raster(mapping = aes(x = x, y = y, fill = z)) +
+     # Add gradient
+     scale_fill_viridis_c(name = legname, na.value = 'white') +
+
+     # Add axis labels
+     ylab('Y (meters)') +
+     xlab('X (meters)') +
+
+     # Ensure the plotting space is not expanded
+     coord_fixed(expand = FALSE) +
+
+     # Modify the legend and add a plot border:
+     theme(legend.justification = c(0, 0),
+           legend.background = element_rect(fill = NA),
+           legend.title = element_text(size = 8),
+           legend.text = element_text(size = 8))
+ }
