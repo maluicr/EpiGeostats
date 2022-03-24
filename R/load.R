@@ -988,13 +988,13 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
  pxmap <- function(mapobj = maps, nbigk = c(17, 17), bigk = 4, scaleft = 1){
 
    # additional libraries
-   # library(maptools)
+   library(maptools)
    if(!require(pixelate)){
      devtools::install_github("aimeertaylor/pixelate")
      #library(pixelate)
      }
-   # if (!require(gpclib)) install.packages("gpclib", type="source")
-   # gpclibPermit()
+    if (!require(gpclib)) install.packages("gpclib", type="source")
+    gpclibPermit()
 
 
    # prepare blockdss() maps for pixelate()
