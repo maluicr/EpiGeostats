@@ -23,7 +23,6 @@ Imports:
     sp,
     ggplot2 (>= 3.2.1),
     devtools,
-    pixelate,
     maptools,
     gpclib
 Suggests: 
