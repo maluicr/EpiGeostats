@@ -29,5 +29,6 @@ Suggests:
     markdown,
     knitr (>= 1.24),
     rmarkdown (>= 1.15)
+Remotes: github::aimeertaylor/pixelate
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
