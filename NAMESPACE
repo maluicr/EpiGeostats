@@ -3,3 +3,8 @@ importFrom("stats", "dist", "quantile", "sd")
 importFrom("utils", "read.table", "write.table")
 importFrom("raster", "extent", "unique")
 importFrom("sp", "CRS")
+importFrom("utils", "head")
+importFrom("ggplot2", "ggplot", "geom_raster", "aes", "scale_fill_viridis_c",
+           "ylab", "xlab","coord_fixed", "theme","element_rect","element_text")
+importFrom("pixelate", "pixelate")
+
