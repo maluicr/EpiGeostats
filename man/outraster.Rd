@@ -4,7 +4,7 @@
 \alias{outraster}
 \title{Create raster objects from simulations}
 \usage{
-outraster(blockobj, grids = F, emaps = T)
+outraster(blockobj, grids = FALSE, emaps = TRUE)
 }
 \arguments{
 \item{blockobj, }{string,  name of list, output of function `blockfile()`}
