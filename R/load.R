@@ -1,7 +1,7 @@
 #' Creates an disease incidence rates file to be read by dss.64.c.exe
 #'
 #' Function computes disease incidence rates and variance-error terms by region,
-#' and writes the result into a text file (.out) that is stored in `input` folder.
+#' and writes the result into a text file (.out) that is stored in `./input` folder.
 #' As input you should provide a dataframe with disease cases, population size
 #' and cartesian coordinates by region. Columns should include the following data:
 #' id of region, x, y and z cartesian coordinates at regions mass center,
