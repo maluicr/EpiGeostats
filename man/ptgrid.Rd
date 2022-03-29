@@ -9,7 +9,7 @@ A data.frame with 40608 rows and 3 columns
 \describe{
   \item{x}{x-coordinates, in meters}
   \item{y}{y-coordinates, in meters}
-  \item{oid_}{number for region id (municipality id code)}
+  \item{oid_}{id, municipality's id number)}
 }
 }
 \source{
@@ -21,8 +21,8 @@ data(ptgrid)
 \description{
 The ptgrid dataset refers to a data.frame representing
 a rectangular grid with 2 km x 2 km spacing that covers Portugal mainland.
-All grid nodes with values not NA refer to the number of municipality id.
-Remaining grid nodes (on sea or Spain country) are set to NA value.
+Grid nodes with real values refer to the municipality id (block data).
+Grid nodes located on sea or Spain country are set to `NA`.
 }
 \examples{
 data(ptgrid)
