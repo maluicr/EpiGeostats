@@ -991,10 +991,12 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
 
    if (!requireNamespace(devtools)) {
      utils::install.packages("devtools", type = "source")
-     }
+   }
+
    if(!requireNamespace(pixelate, quietly = TRUE)){
      devtools::install_github(repo = "aimeertaylor/pixelate", build_vignettes = TRUE, force = TRUE)
-     }
+   }
+
    if (!requireNamespace(gpclib)) install.packages("gpclib", type="source")
    maptools::gpclibPermit()
 
