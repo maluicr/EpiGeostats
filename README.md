@@ -22,7 +22,7 @@ if (!require("devtools")){
   }
   
   # install packages from GitHub
-  devtools::install_github("maluicr/blockdss", build_vignettes = TRUE, upgrade_dependencies = FALSE)
+  devtools::install_github("maluicr/blockdss", build_vignettes = TRUE, dependencies = TRUE)
   devtools::install_github("aimeertaylor/pixelate", build_vignettes = TRUE, dependencies = TRUE)
 ```
 
