@@ -46,17 +46,17 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
   ip = grep(pop, colnames(dfobj))
 
   # compute overall mean rate (exclude rows w/ cases = NA)
-  dfobjnas = subset(dfobj, dfobj[, ic]!= "NA")
+  dfobjnas = base::subset(dfobj, dfobj[, ic]!= "NA")
   n = ncol(dfobjnas)
   dfobjnas$rate = phab * dfobjnas[, ic] / dfobjnas[, ip]
-  poptnas = sum(dfobjnas[, ip])
-  m = sum(dfobjnas[, "rate"] * dfobjnas[, ip]) / poptnas
+  poptnas = base::sum(dfobjnas[, ip])
+  m = base::sum(dfobjnas[, "rate"] * dfobjnas[, ip]) / poptnas
 
   # error variance term (m/n_i)
   error = m / dfobj[, ip]
 
   # NA cases set to casesNA
-  dfobj[, ic] = ifelse(is.na(dfobj[, ic]), casesNA, dfobj[, ic])
+  dfobj[, ic] = base::ifelse(is.na(dfobj[, ic]), casesNA, dfobj[, ic])
 
   # recalculate crude rates
   rate = phab * dfobj[, ic] / dfobj[, ip]
@@ -78,10 +78,10 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
   tabnotf = tab[, c("x", "y", "z", "rate")]
 
   # store nr of variables
-  nvars = ncol(tabnotf)
+  nvars = base::ncol(tabnotf)
 
   # store nr of observations
-  nobs = nrow(tabnotf)
+  nobs = base::nrow(tabnotf)
 
   # store vector variable names
   namevars = names(tabnotf)
@@ -989,11 +989,11 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
  #' @export
  pxmap <- function(mapobj = maps, nbigk = c(17, 17), bigk = 4, scaleft = 1){
 
-   if (!requireNamespace(devtools)) {
+   if (!require(devtools)) {
      utils::install.packages("devtools", type = "source")
    }
 
-   if(!requireNamespace(pixelate, quietly = TRUE)){
+   if(!require(pixelate, quietly = TRUE)){
      devtools::install_github(repo = "aimeertaylor/pixelate", build_vignettes = TRUE, force = TRUE)
    }
 
