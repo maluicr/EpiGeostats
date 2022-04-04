@@ -127,11 +127,11 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
 #' Function creates a block file to be read by dss.64.c.exe
 #'
 #' Transforms a grid file in block format and writes the result into a text file (.out) that is stored in `input` folder.
-#' As input you should provide a georeferenced grid file with id region values at simulation locations,
+#' As input you should provide the grid object name with id region values at simulation grid nodes,
 #' and a list returned by funtion irates().
 #'
 #' @param rateobj, string, name of list, output of function irates()
-#' @param gridimage, character,  name of georeferenced grid file (e.g. tif)
+#' @param gridimage, string,  name of grid object
 #' @param NAval, numeric, integer with grid value for "No data"
 #'
 #' @return
