@@ -997,7 +997,7 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
      devtools::install_github(repo = "aimeertaylor/pixelate", build_vignettes = TRUE, force = TRUE)
    }
 
-   if (!requireNamespace(gpclib)) install.packages("gpclib", type="source")
+   if (!require(gpclib)) install.packages("gpclib", type="source")
    maptools::gpclibPermit()
 
    # prepare blockdss() maps for pixelate()
