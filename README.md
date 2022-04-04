@@ -12,7 +12,7 @@ This package provides convenient wrappers to write data frames in format readabl
 
 # Getting started
 
-1. download dss.c.64.exe from https://github.com/maluicr/dss (follow the download instructions)
+1. go to https://github.com/maluicr/dss and download dss.c.64.exe (follow the download instructions)
 2. install required packages using the following code (please accept any suggested package updates): 
 
 ```r
