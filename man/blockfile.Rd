@@ -9,7 +9,7 @@ blockfile(rateobj, gridimage, NAval = -999)
 \arguments{
 \item{rateobj, }{string, name of list, output of function irates()}
 
-\item{gridimage, }{character,  name of georeferenced grid file (e.g. tif)}
+\item{gridimage, }{string,  name of grid object}
 
 \item{NAval, }{numeric, integer with grid value for "No data"}
 }
@@ -21,7 +21,7 @@ blockfile(rateobj, gridimage, NAval = -999)
 }
 \description{
 Transforms a grid file in block format and writes the result into a text file (.out) that is stored in `input` folder.
-As input you should provide a georeferenced grid file with id region values at simulation locations,
+As input you should provide the grid object name with id region values at simulation grid nodes,
 and a list returned by funtion irates().
 }
 \details{
