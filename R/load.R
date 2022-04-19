@@ -1061,7 +1061,7 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
      id <- simid
      if(dim(maps[["simulations"]])[3] < id){stop("simid > number of simulations")}
      # prepare map for ggplot()
-     px_in <- raster::as.data.frame(mapobj[[m]][id],
+     px_in <- raster::as.data.frame(mapobj[[m]][[id]],
                                     row.names = NULL,
                                     optional = FALSE,
                                     xy = TRUE,
