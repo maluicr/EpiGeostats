@@ -41,7 +41,7 @@ if (!require("devtools")){
   }
   
   # install packages from GitHub
-  devtools::install_github("maluicr/blockdss", dependencies = TRUE)
+  devtools::install_github("maluicr/blockdss", build_vignettes = TRUE, dependencies = TRUE)
   devtools::install_github("aimeertaylor/pixelate", build_vignettes = TRUE, dependencies = TRUE)
 ```
 
@@ -172,16 +172,16 @@ maps <- outraster(block)
 
 #### Plotting disease map results
 
-Plot simulations: 
+`spmap()` to plot simulations:
 
 ```{r spplot sims, eval = F}
-raster::spplot(maps[["simulations"]])
+library(ggplot2)
+spmap(maps, mapvar = "simulations", simid = 1, legname = "Simulation #1")
 ```
 
 `spmap()` to plot median e-type and spatial uncertainty maps:
 
 ```{r, message = F, warning=F, eval = F}
-library(ggplot2)
 library(pixelate)
 spmap(maps, mapvar = "etype", legname = "Median \n incidence")
 spmap(maps, mapvar = "uncertainty", legname = "IQ range")
