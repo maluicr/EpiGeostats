@@ -126,21 +126,21 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
 
 #' Function creates a block file to be read by dss.64.c.exe
 #'
-#' Transforms a grid file in block format and writes the result into a text file (.out) that is stored in `input` folder.
-#' As input you should provide the grid object name with id region values at simulation grid nodes,
+#' Converts a SpatialPixelsDataFrame object representing block data into a text file (.out) that is stored in `input` folder.
+#' As input you should provide a SpatialPixelsDataFrame object name representing block data, with id region values at simulation grid nodes,
 #' and a list returned by funtion irates().
 #'
 #' @param rateobj, string, name of list, output of function irates()
-#' @param gridimage, string,  name of grid object
+#' @param gridimage, string,  name of block file, a SpatialPixelsDataFrame object
 #' @param NAval, numeric, integer with grid value for "No data"
 #'
 #' @return
-#' \item{gridpars}{list parameters from georeferenced grid file: number rows and columns, resolution, (x,y), coordinates of the origin, NA value}
+#' \item{gridpars}{list parameters from block data: number rows and columns, resolution, (x,y), coordinates of the origin, NA value}
 #' \item{outgrid}{list vector node values, vector id of regions, and number of regions   }
-#' \item{file}{list characters; indicating the day of data collection, filename and root folder where text file is stored}
-#' \item{ingrid}{a rasterlayer object created from georeferenced grid file}
+#' \item{file}{list characters; indicating the day of data collection, filename and root folder where file is stored}
+#' \item{ingrid}{the SpatialPixelsDataFrame object used}
 #'
-#' @details The grid file values should refer to the region id's at simulation locations (nodes). Every regions recorded in disease data file should be assigned to 1 or more node.
+#' @details The gridded values should refer to the region id's at simulation locations (nodes). Every regions recorded in disease data file should be assigned to 1 or more grid node.
 #'
 #'
 #' @importFrom raster res extent as.matrix
@@ -1043,7 +1043,7 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
  #'
  #' The function wraps functions from ggplot2 to provide a more elegant map.
  #'
- #' As input you should provide the result returned by `outraster()` or a `RasterLayer` object.
+ #' As input you should provide a `RasterLayer` object returned by `outraster()`.
  #
  #' @param mapobj string, name of list, output of function `outraster()`
  #' @param mapvar character, the map to be plotted ("etype", "unc").
