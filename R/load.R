@@ -1033,10 +1033,10 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
 
      # Modify the legend and add a plot border:
      ggplot2::theme(legend.justification = c(0, 0),
-           legend.background = ggplot2::element_rect(fill = NA),
-           legend.title = ggplot2::element_text(size = 8),
-           legend.text = ggplot2::element_text(size = 8))
-
+                    legend.position = c(1, 0),
+                    legend.background = ggplot2::element_rect(fill = NA),
+                    legend.title = ggplot2::element_text(size = 10),
+                    legend.text = ggplot2::element_text(size = 10))
  }
 
  #' Creates elegant simulations, median e-type/uncertainty maps
@@ -1093,7 +1093,8 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
 
      # Modify the legend and add a plot border:
      ggplot2::theme(legend.justification = c(0, 0),
-           legend.background = ggplot2::element_rect(fill = NA),
-           legend.title = ggplot2::element_text(size = 8),
-           legend.text = ggplot2::element_text(size = 8))
+                    legend.position = c(1,0),
+                    legend.background = ggplot2::element_rect(fill = NA),
+                    legend.title = ggplot2::element_text(size = 10),
+                    legend.text = ggplot2::element_text(size = 10))
  }
