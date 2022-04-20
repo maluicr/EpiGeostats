@@ -1025,8 +1025,8 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
      ggplot2::scale_fill_viridis_c(name = paste("Median \n", "Incidence"), na.value = 'white') +
 
      # Add axis labels
-     ggplot2::ylab('Y (meters)') +
-     ggplot2::xlab('X (meters)') +
+     ggplot2::ylab('Y') +
+     ggplot2::xlab('X') +
 
      # Ensure the plotting space is not expanded
      ggplot2::coord_fixed(expand = FALSE) +
@@ -1085,8 +1085,8 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
      ggplot2::scale_fill_viridis_c(name = legname, na.value = 'white') +
 
      # Add axis labels
-     ggplot2::ylab('Y (meters)') +
-     ggplot2::xlab('X (meters)') +
+     ggplot2::ylab('Y') +
+     ggplot2::xlab('X') +
 
      # Ensure the plotting space is not expanded
      ggplot2::coord_fixed(expand = FALSE) +
