@@ -5,7 +5,7 @@
 \title{Creates a parameters file and generates the simulated maps}
 \usage{
 ssdpars(
-  blockobj,
+  grdobj,
   maskobj,
   dfobj,
   varmobj,
@@ -22,7 +22,7 @@ ssdpars(
 )
 }
 \arguments{
-\item{blockobj, }{string, name of list, output of function `blockfile()`}
+\item{grdobj, }{string, name of list, output of function `grdfile()`}
 
 \item{maskobj, }{string, name of list, output of function `maskfile()`}
 
