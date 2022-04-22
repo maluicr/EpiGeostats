@@ -118,7 +118,7 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
   # return data.frame object for variogram calcs
   tabvgm = data.frame (id = dfobj[, ioid], x = dfobj[, ix], y = dfobj[, iy],
                        z = dfobj[, iz], rate, err = error, pop = dfobj[, ip])
-  listf = list(day = day, name = paste0(day, not_nameO), folder = wkin)
+  listf = list(day = day, name = paste0(day, "_",not_nameO), folder = wkin)
   listpars = list(nvars = nvars, xcolumn = xcol, ycolumn = ycol, zcolumn = zcol,
                   varcol = varcol, minval = minval, maxval = maxval)
   return(list(rates = tabvgm, mrisk = m, file = listf, ssdrpars = listpars))
@@ -253,7 +253,7 @@ grdfile = function (rateobj, gridimage, NAval = -999){
   }
   listgrid = grd
   listgridpars = list(nodes = c(nx, ny), resolution = c(resx, resy), origin = c(ox, oy), NAs = NAval)
-  listfile = list(day = day, name = paste0(day, blk_nameO), folder = folder)
+  listfile = list(day = day, name = paste0(day, "_", blk_nameO), folder = folder)
   listgridout = list(values = stacf, idblock = massid, nblock = massn)
   return(list(gridpars = listgridpars, outgrid = listgridout , file = listfile, ingrid = listgrid))
 }
@@ -310,7 +310,7 @@ maskfile = function(grdobj){
   # write mask data
   write.table(mask, file = fmsk, append = TRUE, row.names = FALSE, col.names = FALSE)
 
-  listf = list(day = day, name = paste0(day, msk_nameO), folder = folder)
+  listf = list(day = day, name = paste0(day, "_", msk_nameO), folder = folder)
   listz = list(nzones = mask_zones, zoneval = val)
 
   return(list(file = listf, zones = listz))
