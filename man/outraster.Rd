@@ -4,10 +4,10 @@
 \alias{outraster}
 \title{Create raster objects from simulations}
 \usage{
-outraster(blockobj, grids = FALSE, emaps = TRUE)
+outraster(grdobj, grids = FALSE, emaps = TRUE)
 }
 \arguments{
-\item{blockobj, }{string,  name of list, output of function `blockfile()`}
+\item{grdobj, }{string,  name of list, output of function `grdfile()`}
 
 \item{grids, }{if grids = T  saves simulated maps in 'native' raster package format .grd}
 
