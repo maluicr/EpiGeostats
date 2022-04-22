@@ -87,9 +87,9 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
   namevars = names(tabnotf)
 
   # create file path
-  not_name = "notified"
+  not_name = "rate"
   not_nameO = paste0(not_name, ".out")
-  fnot = paste0(wkin, "/", day, not_nameO)
+  fnot = paste0(wkin, "/", day, "_", not_nameO)
 
   if (file.exists(fnot)){
     file.remove(fnot)
@@ -107,7 +107,7 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
   utils::write.table(format(tabnotf, digits = NULL, justify = "right"),
               file = fnot, quote = FALSE, append = TRUE, row.names = FALSE, col.names = FALSE)
 
-  # pars for ssdir.par
+  # pars for ssdr.par
   xcol = grep("x", colnames(tabnotf))
   ycol = grep("y", colnames(tabnotf))
   zcol = grep("z", colnames(tabnotf))
@@ -121,7 +121,7 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
   listf = list(day = day, name = paste0(day, not_nameO), folder = wkin)
   listpars = list(nvars = nvars, xcolumn = xcol, ycolumn = ycol, zcolumn = zcol,
                   varcol = varcol, minval = minval, maxval = maxval)
-  return(list(rates = tabvgm, mrisk = m, file = listf, ssdirpars = listpars))
+  return(list(rates = tabvgm, mrisk = m, file = listf, ssdrpars = listpars))
 }
 
 #' Function creates a block file to be read by dss.64.c.exe
@@ -146,7 +146,7 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
 #' @importFrom raster res extent as.matrix
 #'
 #' @export
-blockfile = function (rateobj, gridimage, NAval = -999){
+grdfile = function (rateobj, gridimage, NAval = -999){
 
   # strings w/ path to store files
   day = as.character(rateobj[["file"]]["day"])
@@ -180,7 +180,7 @@ blockfile = function (rateobj, gridimage, NAval = -999){
   nas = NAval
   stacf[is.na(stacf)] = nas
 
-  # create array for blockfile
+  # create array for grdfile
   grdata = matrix (stacf, nrow = ny, ncol = nx, byrow = FALSE)
   grxy = expand.grid(x = seq(ox, ox + (nx-1) * resx, by = resx), y = seq(oy, oy + (ny-1) * resy, resy))
   grx = grxy[,1]
@@ -197,9 +197,9 @@ blockfile = function (rateobj, gridimage, NAval = -999){
   massn = length(massid)
 
   # create file path
-  blk_name = "blockdata"
+  blk_name = "grid"
   blk_nameO = paste0(blk_name,".out")
-  fblk = paste0(folder, "/", day, blk_nameO)
+  fblk = paste0(folder, "/", day, "_", blk_nameO)
 
   if (file.exists(fblk)){
     file.remove(fblk)
@@ -262,21 +262,21 @@ blockfile = function (rateobj, gridimage, NAval = -999){
 #'
 #' Creates a mask file and writes the result into a text file (.out) that is stored in `input` folder.
 #' The text file (.out) stores values {-1,0} where -1 are assigned to nodata locations and 0 are assigned to nodes with values (id region).
-#' As input you should provide the name of list returned by `blockfile()`.
+#' As input you should provide the name of list returned by `grdfile()`.
 #'
-#' @param blockobj, string, name of list, output of function `blockfile()`
+#' @param grdobj, string, name of list, output of function `grdfile()`
 #'
 #' @return `maskfile()` also returns the following list of objects:
 #' \item{file}{list characters; indicating filename and root folder where text file is stored}
 #' \item{zones}{list list of values to be passed to ssdpars()}
 #'
 #' @export
-maskfile = function(blockobj){
+maskfile = function(grdobj){
 
-  obj = unlist(blockobj[["outgrid"]]["values"], use.names = FALSE)
-  na = unlist(blockobj[["gridpars"]]["NAs"], use.names = FALSE)
-  day = as.character(blockobj[["file"]]["day"])
-  folder = as.character(blockobj[["file"]]["folder"])
+  obj = unlist(grdobj[["outgrid"]]["values"], use.names = FALSE)
+  na = unlist(grdobj[["gridpars"]]["NAs"], use.names = FALSE)
+  day = as.character(grdobj[["file"]]["day"])
+  folder = as.character(grdobj[["file"]]["folder"])
 
   # write maskfile for dss
 
@@ -293,7 +293,7 @@ maskfile = function(blockobj){
   # create file path
   msk_name = "mask"
   msk_nameO = paste0(msk_name, ".out")
-  fmsk = paste0(folder, "/", day, msk_nameO)
+  fmsk = paste0(folder, "/", day,"_", msk_nameO)
 
   if (file.exists(fmsk)){
     file.remove(fmsk)
@@ -457,7 +457,7 @@ varmodel = function (varexp, mod = c("exp","sph"), nug, ran , sill) {
 #' generate simulated map files (.out). As input you should provide name of objects
 #' and parameter values required for the simulation process.
 
-#' @param blockobj, string, name of list, output of function `blockfile()`
+#' @param grdobj, string, name of list, output of function `grdfile()`
 #' @param maskobj, string, name of list, output of function `maskfile()`
 #' @param dfobj, string, name of list, output of function `irates()`
 #' @param varmobj, string, name of list, output of function `varmodel()`
@@ -480,39 +480,39 @@ varmodel = function (varexp, mod = c("exp","sph"), nug, ran , sill) {
 #' @details Both parameters file (.par) and simulations files (.out) are stored in input folder. Note that the simulation process may take a while, depending mostly on the number of simulation nodes and number of simulations specified.
 #'
 #' @export
-ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 20, biascor = c(1,1),
+ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 20, biascor = c(1,1),
                     ndMin = 1, ndMax = 32, nodMax = 12, radius1, radius2, radius3 = 1, ktype = 1) {
 
-  day = as.character(blockobj[["file"]]["day"])
-  folder = as.character(blockobj[["file"]]["folder"])
+  day = as.character(grdobj[["file"]]["day"])
+  folder = as.character(grdobj[["file"]]["folder"])
 
   # filenames
   rf = as.character(dfobj[["file"]]["name"])
-  bf = as.character(blockobj[["file"]]["name"])
+  bf = as.character(grdobj[["file"]]["name"])
   mf = as.character(maskobj[["file"]]["name"])
 
   # hard data pars
-  nvars = as.numeric(dfobj[["ssdirpars"]]["nvars"])
-  xcolumn = as.numeric(dfobj[["ssdirpars"]]["xcolumn"])
-  ycolumn = as.numeric(dfobj[["ssdirpars"]]["ycolumn"])
-  zcolumn = as.numeric(dfobj[["ssdirpars"]]["zcolumn"])
-  varcol = as.numeric(dfobj[["ssdirpars"]]["varcol"])
-  minval = as.numeric(dfobj[["ssdirpars"]]["minval"])
-  maxval = as.numeric(dfobj[["ssdirpars"]]["maxval"])
+  nvars = as.numeric(dfobj[["ssdrpars"]]["nvars"])
+  xcolumn = as.numeric(dfobj[["ssdrpars"]]["xcolumn"])
+  ycolumn = as.numeric(dfobj[["ssdrpars"]]["ycolumn"])
+  zcolumn = as.numeric(dfobj[["ssdrpars"]]["zcolumn"])
+  varcol = as.numeric(dfobj[["ssdrpars"]]["varcol"])
+  minval = as.numeric(dfobj[["ssdrpars"]]["minval"])
+  maxval = as.numeric(dfobj[["ssdrpars"]]["maxval"])
 
   # mask grid pars
   nzones = as.numeric(maskobj[["zones"]]["nzones"])
 
   # output grid pars
-  nx = as.numeric(unlist(blockobj[["gridpars"]]["nodes"]))[1]
-  ny = as.numeric(unlist(blockobj[["gridpars"]]["nodes"]))[2]
-  ox = as.numeric(unlist(blockobj[["gridpars"]]["origin"]))[1]
-  oy = as.numeric(unlist(blockobj[["gridpars"]]["origin"]))[2]
-  rx = as.numeric(unlist(blockobj[["gridpars"]]["resolution"]))[1]
-  ry = as.numeric(unlist(blockobj[["gridpars"]]["resolution"]))[2]
+  nx = as.numeric(unlist(grdobj[["gridpars"]]["nodes"]))[1]
+  ny = as.numeric(unlist(grdobj[["gridpars"]]["nodes"]))[2]
+  ox = as.numeric(unlist(grdobj[["gridpars"]]["origin"]))[1]
+  oy = as.numeric(unlist(grdobj[["gridpars"]]["origin"]))[2]
+  rx = as.numeric(unlist(grdobj[["gridpars"]]["resolution"]))[1]
+  ry = as.numeric(unlist(grdobj[["gridpars"]]["resolution"]))[2]
 
   # general pars
-  nas = as.numeric(blockobj[["gridpars"]]["NAs"])
+  nas = as.numeric(grdobj[["gridpars"]]["NAs"])
 
   # varigram pars
   nstruct = as.numeric(varmobj[["structures"]])
@@ -524,10 +524,10 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
   mtype = as.numeric(varmobj[["parameters"]]["modeltype"])
 
   # block kriging pars
-  maxblocks = as.numeric(blockobj[["outgrid"]]["nblock"])
+  maxblocks = as.numeric(grdobj[["outgrid"]]["nblock"])
 
 
-  # ------ write ssdir.par for dss ------
+  # ------ write ssdr.par for dss ------
 
   # store number of simulations
   nsim = simulations
@@ -587,9 +587,9 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
   #
 
   # create file path
-  ssd_name = "ssdir"
+  ssd_name = "ssdr"
   ssd_nameO = paste0(ssd_name, ".par")
-  fssd = paste0(folder, "/", day, ssd_nameO)
+  fssd = paste0(folder, "/", day, "_", ssd_nameO)
 
   if (file.exists(fssd)){
     file.remove(fssd)
@@ -648,7 +648,7 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
   cat("#-------------------------------------------------------------------------------------#", file = fssd, sep = "\n", append = TRUE)
 
   cat("[SIMULATION]", file = fssd, sep = "\n", append = TRUE)
-  cat(paste0("OUTFILE = ", day, "sim"), file = fssd, sep = "\n", append = TRUE)
+  cat(paste0("OUTFILE = ", day, "_","sim"), file = fssd, sep = "\n", append = TRUE)
   cat(paste0("NSIMS = ", nsim), file = fssd, sep = "\n", append = TRUE)
   cat(paste0("NTRY = ", nbias), file = fssd, sep = "\n", append = TRUE)
   cat(paste0("AVGCORR = ", biascor[1]), file = fssd, sep = "\n", append = TRUE)
@@ -692,7 +692,7 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
 
   cat("[SEARCH]", file = fssd, sep = "\n", append = TRUE)
 
-  # ------- ssdir.par: search parameters -------
+  # ------- ssdr.par: search parameters -------
 
   # hard-coded values
   sstrat = 1
@@ -734,7 +734,7 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
   cat("#   here we define the kriging information, and secondary info when applicable        #", file = fssd, sep = "\n", append = TRUE)
   cat("#-------------------------------------------------------------------------------------#", file = fssd, sep = "\n", append = TRUE)
 
-  # ------- ssdir.par: krige info -------
+  # ------- ssdr.par: krige info -------
 
   # hard-coded values
   colorcorr = 0
@@ -768,7 +768,7 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
   cat("#        here we define the variogram to use. if more than 1, use [VARIOGRAM2]        #", file = fssd, sep = "\n", append = TRUE)
   cat("#-------------------------------------------------------------------------------------#", file = fssd, sep = "\n", append = TRUE)
 
-  # ------- ssdir.par: variogram models -------
+  # ------- ssdr.par: variogram models -------
 
   for (j in 1 : nzones) {
     cat(paste0("[VARIOGRAMZ", j, "]"), file = fssd, sep = "\n", append = TRUE)
@@ -869,7 +869,7 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
 #' and returns a list with simulated maps (rasterstack object),
 #' e-type and uncertainty maps (rasterlayers).
 
-#' @param blockobj, string,  name of list, output of function `blockfile()`
+#' @param grdobj, string,  name of list, output of function `grdfile()`
 #' @param grids, if grids = T  saves simulated maps in 'native' raster package format .grd
 #' @param emaps, if emaps = T (default), saves e-type and uncertainty maps in format .grd
 #'
@@ -886,20 +886,20 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
 #'
 #' @export
 
- outraster = function (blockobj, grids = FALSE, emaps = TRUE) {
+ outraster = function (grdobj, grids = FALSE, emaps = TRUE) {
 
-   day = blockobj[["file"]]["day"]
-   folder = blockobj[["file"]]["folder"]
+   day = grdobj[["file"]]["day"]
+   folder = grdobj[["file"]]["folder"]
 
    # create prefix .out filenames
-   simout = paste0(day, "sim_")
+   simout = paste0(day, "_", "sim")
 
-   # store list .out namefiles
+   # store list .out filenames
    lf = list.files(paste0(folder,"/"), pattern ="\\.out$")
    dss_list = list(simnames = Filter(function(x) grepl(simout, x), lf))
 
    # store .out NA value
-   bNA <- as.integer(blockobj[["gridpars"]]["NAs"])
+   bNA <- as.integer(grdobj[["gridpars"]]["NAs"])
 
 
    # store number of simulations
@@ -916,15 +916,15 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
 
      # set grid size
      # mc : nr columns, mr : nr rows
-     mc = blockobj[["gridpars"]][["nodes"]][1]
-     mr = blockobj[["gridpars"]][["nodes"]][2]
+     mc = grdobj[["gridpars"]][["nodes"]][1]
+     mr = grdobj[["gridpars"]][["nodes"]][2]
 
-     xmin = blockobj[["ingrid"]]@extent[1]
-     xmax = blockobj[["ingrid"]]@extent[2]
-     ymin = blockobj[["ingrid"]]@extent[3]
-     ymax = blockobj[["ingrid"]]@extent[4]
+     xmin = grdobj[["ingrid"]]@extent[1]
+     xmax = grdobj[["ingrid"]]@extent[2]
+     ymin = grdobj[["ingrid"]]@extent[3]
+     ymax = grdobj[["ingrid"]]@extent[4]
 
-     crsname = as.character(blockobj[["ingrid"]]@crs)
+     crsname = as.character(grdobj[["ingrid"]]@crs)
 
      # create matrix
      out02 = matrix(0, nrow = mr, ncol = mc)
@@ -949,18 +949,18 @@ ssdpars = function (blockobj, maskobj, dfobj, varmobj, simulations = 1, nrbias =
      raster::projection(r) = sp::CRS(crsname)
 
      if(grids == TRUE){
-       raster::writeRaster(r, filename = paste0(folder,"/", day, "sim_", k), overwrite = TRUE)
+       raster::writeRaster(r, filename = paste0(folder,"/", day, "_", "sim", k), overwrite = TRUE)
      }
      # add layer to stack
      ssims = raster::stack(ssims, r)
      # change layer name
-     names(ssims[[k]]) = paste0("sim_", k)
+     names(ssims[[k]]) = paste0("sim", k)
    }
    etype = raster::calc(ssims, fun = function(x) {quantile(x, probs = .5,na.rm=TRUE)})
    uncer = raster::calc(ssims, fun = sd, na.rm = TRUE)
    if (emaps == TRUE){
-     raster::writeRaster(etype, filename = paste0(folder, "/", day, "etype"), overwrite = TRUE)
-     raster::writeRaster(uncer, filename = paste0(folder, "/", day, "uncertainty"), overwrite = TRUE)
+     raster::writeRaster(etype, filename = paste0(folder, "/", day, "_", "medn"), overwrite = TRUE)
+     raster::writeRaster(uncer, filename = paste0(folder, "/", day, "_", "uncr"), overwrite = TRUE)
    }
    listmaps = list(simulations = ssims, etype = etype, uncertainty = uncer )
    return(listmaps)
