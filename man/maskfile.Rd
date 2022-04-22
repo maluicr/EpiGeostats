@@ -4,10 +4,10 @@
 \alias{maskfile}
 \title{Function creates a mask file to be read by dss.64.c.exe}
 \usage{
-maskfile(blockobj)
+maskfile(grdobj)
 }
 \arguments{
-\item{blockobj, }{string, name of list, output of function `blockfile()`}
+\item{grdobj, }{string, name of list, output of function `grdfile()`}
 }
 \value{
 `maskfile()` also returns the following list of objects:
@@ -17,5 +17,5 @@ maskfile(blockobj)
 \description{
 Creates a mask file and writes the result into a text file (.out) that is stored in `input` folder.
 The text file (.out) stores values {-1,0} where -1 are assigned to nodata locations and 0 are assigned to nodes with values (id region).
-As input you should provide the name of list returned by `blockfile()`.
+As input you should provide the name of list returned by `grdfile()`.
 }
