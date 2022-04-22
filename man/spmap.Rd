@@ -4,17 +4,12 @@
 \alias{spmap}
 \title{Creates elegant simulations, median e-type/uncertainty maps}
 \usage{
-spmap(
-  mapobj = maps,
-  mapvar = c("etype", "unc", "simulations"),
-  simid = 1,
-  legname = "Incidence"
-)
+spmap(mapobj = maps, mapvar = "etype", simid = 1, legname = "Incidence")
 }
 \arguments{
 \item{mapobj}{string, name of list, output of function `outraster()`}
 
-\item{mapvar}{character, the map to be plotted ("etype", "unc", "simulations")}
+\item{mapvar}{character, the map to be plotted, one of the following c("etype", "unc", "simulations")}
 
 \item{simid}{numeric, for mapvar = "simulations", is the simulation number to be plotted.}
 
