@@ -855,7 +855,7 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
   # ------ run dss ------
 
   wd = getwd()
-  parfile = paste0(day,ssd_nameO)
+  parfile = paste0(day, "_", ssd_nameO)
   setwd("./input")
   system(paste0("./DSS.C.64.exe ", parfile))
   setwd(wd)
