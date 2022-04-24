@@ -148,13 +148,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <div id="blockdss" class="section level2">
 <h2>blockdss</h2>
-<p>blockdss R package generates geostatistical disease maps using block direct sequential simulation algorithm and provides visualization tools for effective analysis and communication of disease risk mapping results.</p>
-<p>It may also be used for similar problems such as mortality rates, or applied to other fields like ecology or criminology. Details on the geostatistical algorithm used in blockdss are described in Azevedo et al (<a href="https://doi.org/10.1186/s12942-020-00221-5" class="uri">https://doi.org/10.1186/s12942-020-00221-5</a>).</p>
+<p>blockdss R package generates geostatistical disease maps using block direct sequential simulation algorithm and provides visualization tools for effective analysis and communication of disease risk map results.</p>
+<p>The package may also be used with mortality rates, or applied to other fields like ecology or criminology.</p>
 </div>
 <div id="r-wrapper" class="section level2">
 <h2>R wrapper</h2>
-<p>blockdss R package, is a wrapper for running a geostatistical software - dss.c.64.exe - to compute block direct sequential simulation algorithm, and for calling pixelate R package (<a href="https://github.com/aimeertaylor/pixelate" class="uri">https://github.com/aimeertaylor/pixelate</a>) to plot spatial risk uncertainty in geostatistical disease risk maps.</p>
-<p>The package provides convenient wrappers to set parameters required for geostatistical simulations and writes files in dss.c.64.exe readable format, after which block direct sequential simulation algorithm can be executed. Results generate a set of simulated disease risk maps, median risk, spatial uncertainty, and a pixelated map version representing both disease and spatial uncertainty risks in a single-map, that can be extracted and/or plotted in R.</p>
+<p>blockdss R package is a wrapper for running a geostatistical software - dss.c.64.exe - to compute block direct sequential simulation algorithm, and for calling pixelate R package (<a href="https://github.com/aimeertaylor/pixelate" class="uri">https://github.com/aimeertaylor/pixelate</a>) to plot spatial risk uncertainty in disease risk maps.</p>
+<p>Details on the geostatistical algorithm used in blockdss are described in Azevedo et al (<a href="https://doi.org/10.1186/s12942-020-00221-5" class="uri">https://doi.org/10.1186/s12942-020-00221-5</a>).</p>
+<p>The package provides convenient wrappers to set parameters required for geostatistical simulations and writes files in dss.c.64.exe readable format, after which block direct sequential simulation algorithm can be executed. Results generate a set of simulated disease risk, median risk and spatial uncertainty maps, and a pixelated single-map with disease risk and uncertainty, that can be extracted and/or plotted in R.</p>
 </div>
 <div id="getting-started" class="section level2">
 <h2>Getting started</h2>
@@ -202,7 +203,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(ptdata)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(ptgrid)</span></code></pre></div>
-<p>Disease data is a data frame with spatial data point locations, region id, number of disease cases and size of population. Point data refers to a rectangular grid with region id values at all simulation x, y coordinates (grid nodes). All unique id regions in disease data frame should be represented by 1 or more grid nodes.</p>
+<p>Block data refers to disease <code>data.frame</code> with spatial data point locations (centroids), region id, number of disease cases and size of population. Point data refers to a rectangular grid with region id values at all simulation x, y coordinates (grid nodes). All unique id regions in disease <code>data.frame</code> should be represented by 1 or more grid nodes.</p>
 <p>We need to transform <code>ptgrid</code> to <code>SpatialPixelsDataFrame</code>:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sp)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">coordinates</span>(ptgrid) <span class="ot">&lt;-</span> <span class="er">~</span>x<span class="sc">+</span>y</span>

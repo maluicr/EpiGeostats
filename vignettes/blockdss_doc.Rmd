@@ -18,15 +18,17 @@ knitr::opts_chunk$set(
 
 ## blockdss
 
-blockdss R package generates geostatistical disease maps using block direct sequential simulation algorithm and provides visualization tools for effective analysis and communication of disease risk mapping results. 
+blockdss R package generates geostatistical disease maps using block direct sequential simulation algorithm and provides visualization tools for effective analysis and communication of disease risk map results. 
 
-It may also be used for similar problems such as mortality rates, or applied to other fields like ecology or criminology. Details on the geostatistical algorithm used in blockdss are described in Azevedo et al (https://doi.org/10.1186/s12942-020-00221-5).
+The package may also be used with mortality rates, or applied to other fields like ecology or criminology. 
 
 ## R wrapper
 
-blockdss R package, is a wrapper for running a geostatistical software - dss.c.64.exe - to compute block direct sequential simulation algorithm, and for calling pixelate R package (https://github.com/aimeertaylor/pixelate) to plot spatial risk uncertainty in geostatistical disease risk maps.
+blockdss R package is a wrapper for running a geostatistical software - dss.c.64.exe - to compute block direct sequential simulation algorithm, and for calling pixelate R package (https://github.com/aimeertaylor/pixelate) to plot spatial risk uncertainty in disease risk maps.
 
-The package provides convenient wrappers to set parameters required for geostatistical simulations and writes files in dss.c.64.exe readable format, after which block direct sequential simulation algorithm can be executed. Results generate a set of simulated disease risk maps, median risk, spatial uncertainty, and a pixelated map version representing both disease and spatial uncertainty risks in a single-map, that can be extracted and/or plotted in R.
+Details on the geostatistical algorithm used in blockdss are described in Azevedo et al (https://doi.org/10.1186/s12942-020-00221-5).
+
+The package provides convenient wrappers to set parameters required for geostatistical simulations and writes files in dss.c.64.exe readable format, after which block direct sequential simulation algorithm can be executed. Results generate a set of simulated disease risk, median risk and spatial uncertainty maps, and a pixelated single-map with disease risk and uncertainty, that can be extracted and/or plotted in R.
 
 ## Getting started
 
@@ -86,7 +88,7 @@ data(ptdata)
 data(ptgrid)
 ```
 
-Disease data is a data frame with spatial data point locations, region id, number of disease cases and size of population. Point data refers to a rectangular grid with region id values at all simulation x, y coordinates (grid nodes). All unique id regions in disease data frame should be represented by 1 or more grid nodes.
+Block data refers to disease `data.frame` with spatial data point locations (centroids), region id, number of disease cases and size of population. Point data refers to a rectangular grid with region id values at all simulation x, y coordinates (grid nodes). All unique id regions in disease `data.frame` should be represented by 1 or more grid nodes.
 
 We need to transform `ptgrid` to `SpatialPixelsDataFrame`:
 
