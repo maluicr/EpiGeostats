@@ -54,7 +54,7 @@ ssdpars(
 Function returns the following list of objects:
 \item{structures}{the number of spatial strutures (excluding nugget-effect)}
 \item{parameters}{a dataframe with model information to be passed to ssdpars()}
-\item{fittedval}{a numeric vector of fitted values as set by the variogram model}
+\item{fittedval}{a numeric vector of fitted values as set by the semi-variogram model}
 }
 \description{
 Creates a parameters file (.par) and invokes dss.c.64.exe to run block simulation program and
