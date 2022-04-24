@@ -2,22 +2,23 @@
 % Please edit documentation in R/load.R
 \name{varexp}
 \alias{varexp}
-\title{Calculates population-weighted experimental semivariogram}
+\title{Calculates experimental population-weighted semi-variogram}
 \usage{
 varexp(dfobj, lag, nlags)
 }
 \arguments{
 \item{dfobj, }{string, name of list, output of function irates()}
 
-\item{lag, }{numeric, the lag distance used for variogram estimates}
+\item{lag, }{numeric, the lag distance used for semi-variogram estimates}
 
-\item{nlags, }{numeric, the number of lags to calculate variogram}
+\item{nlags, }{numeric, the number of lags to calculate semi-variogram}
 }
 \value{
-The function returns a list with the variance and semivariogram estimates weighted by population size at nlags:
+The function returns a list with the variance and semi-variogram estimates weighted by population size at nlags:
 \item{weightsvar}{is the value of the weighted population variance}
 \item{semivar}{a dataframe with a vector of distances, a vector of experimental semivariogram values and number of pairs}
 }
 \description{
-Calculates population-weighted experimental semivariograms from disease incidence rates. For now is only implemented in omnidirectional case.
+Calculates experimental population-weighted  semi-variograms from disease incidence rates.
+For now is only implemented in omnidirectional case.
 }
