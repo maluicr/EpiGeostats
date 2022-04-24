@@ -867,10 +867,13 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
   setwd("./input")
   if(file.exists(parfile)) {
     cat(paste0(parfile, " created.\n"))
-    warning("Running dss.c.64.exe. This process may take a while.")
   }
 
+  message("Running dss.c.64.exe. This process may take a while.")
+  packageStartupMessage("initializing ...", appendLF = FALSE)
   system(paste0("./DSS.C.64.exe ", parfile))
+  packageStartupMessage(" done")
+
   setwd(wd)
 
 }
