@@ -2,7 +2,7 @@
 % Please edit documentation in R/load.R
 \name{grdfile}
 \alias{grdfile}
-\title{Function creates a block file to be read by dss.64.c.exe}
+\title{Function creates a grid file to be read by dss.64.c.exe}
 \usage{
 grdfile(rateobj, gridimage, NAval = -999)
 }
@@ -20,8 +20,8 @@ grdfile(rateobj, gridimage, NAval = -999)
 \item{ingrid}{the SpatialPixelsDataFrame object used}
 }
 \description{
-Converts a SpatialPixelsDataFrame object representing block data into a text file (.out) that is stored in `input` folder.
-As input you should provide a SpatialPixelsDataFrame object name representing block data, with id region values at simulation grid nodes,
+Converts grid nodes (spatial grid) into a text file (.out) that is stored in `input` folder.
+As input you should provide the spatial grid (SpatialPixelsDataFrame), with id region values at simulation grid nodes,
 and a list returned by funtion irates().
 }
 \details{
