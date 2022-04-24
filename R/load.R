@@ -964,7 +964,7 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
        gridname <- paste0(folder, "/", day, "_", "sim", k)
        raster::writeRaster(r, filename = gridname, overwrite = TRUE)
        if(file.exists(paste0(gridname, ".gri"))){
-         cat(gridname, ".gri (and .grd) created.")
+         cat(gridname, ".gri (and .grd) created.\n")
        }
      }
 
@@ -979,7 +979,7 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
      etypeName <- paste0(folder, "/", day, "_", "medn")
      raster::writeRaster(etype, filename = etypeName, overwrite = TRUE)
      if(file.exists(paste0(etypeName, ".gri"))){
-       cat(etypeName, ".gri (and .grd) created.")
+       cat(etypeName, ".gri (and .grd) created.\n")
      }
      uncrName <- paste0(folder, "/", day, "_", "uncr")
      raster::writeRaster(uncer, filename = uncrName, overwrite = TRUE)
