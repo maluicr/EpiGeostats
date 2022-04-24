@@ -2,30 +2,30 @@
 % Please edit documentation in R/load.R
 \name{varmodel}
 \alias{varmodel}
-\title{Fit a theoretical variogram to data}
+\title{Fit a theoretical semi-variogram to data}
 \usage{
 varmodel(varexp, mod = c("exp", "sph"), nug, ran, sill)
 }
 \arguments{
 \item{varexp, }{string, name of object, output of function `varexp()`}
 
-\item{mod, }{character, the variogram model type ('sph' or 'exp')}
+\item{mod, }{character, the semi-variogram model type ('sph' or 'exp')}
 
-\item{nug, }{numeric, nugget-effect value of the variogram}
+\item{nug, }{numeric, nugget-effect value of the semi-variogram}
 
-\item{ran, }{numeric, range value of the variogram}
+\item{ran, }{numeric, range value of the semi-variogram}
 
-\item{sill, }{numeric, sill (or partial sill) value of the variogram}
+\item{sill, }{numeric, sill (or partial sill) value of the semi-variogram}
 }
 \value{
 Function returns the following list of objects:
 \item{structures}{the number of spatial strutures (excluding nugget-effect)}
 \item{parameters}{a dataframe with model information to be passed to ssdpars()}
-\item{fittedval}{a numeric vector of fitted values as set by the variogram model}
+\item{fittedval}{a numeric vector of fitted values as set by the semi-variogram model}
 }
 \description{
-Function fits (manually) a theoretical variogram.
-For now, the variogram model types available are spherical ('sph') and exponential ('exp').
-You should provide the experimental semivariogram, select a variogram model type and set the variogram parameters (nugget, range and sill).
-You may evaluate fit by visual inspection.
+Function fits (manually) a theoretical semi-variogram.
+For now, model types available are spherical ('sph') and exponential ('exp').
+Users should provide the experimental semi-variogram, fit a model type and set the semi-variogram parameters (nugget, range and sill).
+With base function plot(), results can be visualized.
 }
