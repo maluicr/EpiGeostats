@@ -106,6 +106,9 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
   # write notification data
   utils::write.table(format(tabnotf, digits = NULL, justify = "right"),
               file = fnot, quote = FALSE, append = TRUE, row.names = FALSE, col.names = FALSE)
+  if(file.exists(fnot)) {
+    cat(paste0(fnot, " created."))
+  }
 
   # pars for ssdr.par
   xcol = grep("x", colnames(tabnotf))
@@ -115,7 +118,7 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
   minval = min(tabnotf$rate)
   maxval = max(tabnotf$rate)
 
-  # return data.frame object for variogram calcs
+  # return data.frame object for semi- calcs
   tabvgm = data.frame (id = dfobj[, ioid], x = dfobj[, ix], y = dfobj[, iy],
                        z = dfobj[, iz], rate, err = error, pop = dfobj[, ip])
   listf = list(day = day, name = paste0(day, "_",not_nameO), folder = wkin)
@@ -124,10 +127,10 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
   return(list(rates = tabvgm, mrisk = m, file = listf, ssdrpars = listpars))
 }
 
-#' Function creates a block file to be read by dss.64.c.exe
+#' Function creates a grid file to be read by dss.64.c.exe
 #'
-#' Converts a SpatialPixelsDataFrame object representing block data into a text file (.out) that is stored in `input` folder.
-#' As input you should provide a SpatialPixelsDataFrame object name representing block data, with id region values at simulation grid nodes,
+#' Converts grid nodes (spatial grid) into a text file (.out) that is stored in `input` folder.
+#' As input you should provide the spatial grid (SpatialPixelsDataFrame), with id region values at simulation grid nodes,
 #' and a list returned by funtion irates().
 #'
 #' @param rateobj, string, name of list, output of function irates()
@@ -239,8 +242,6 @@ grdfile = function (rateobj, gridimage, NAval = -999){
 
     # data.table::fwrite
     blk_list = list()
-    #if (!"data.table" %in% installed.packages()) install.packages("data.table")
-    #library("data.table")
     for (k in 1:ny) {
       for(l in 1:nx){
         if(gridout[k, l, 1] == id) {
@@ -251,6 +252,10 @@ grdfile = function (rateobj, gridimage, NAval = -999){
     }
     data.table::fwrite(blk_list, file = fblk, append = TRUE, sep="\n")
   }
+  if(file.exists(fblk)) {
+    cat(paste0(fblk, " created."))
+  }
+
   listgrid = grd
   listgridpars = list(nodes = c(nx, ny), resolution = c(resx, resy), origin = c(ox, oy), NAs = NAval)
   listfile = list(day = day, name = paste0(day, "_", blk_nameO), folder = folder)
@@ -309,22 +314,25 @@ maskfile = function(grdobj){
 
   # write mask data
   write.table(mask, file = fmsk, append = TRUE, row.names = FALSE, col.names = FALSE)
-
+  if(file.exists(fmsk)) {
+    cat(paste0(fmsk, " created."))
+    }
   listf = list(day = day, name = paste0(day, "_", msk_nameO), folder = folder)
   listz = list(nzones = mask_zones, zoneval = val)
 
   return(list(file = listf, zones = listz))
 }
 
-#' Calculates population-weighted experimental semivariogram
+#' Calculates experimental population-weighted semi-variogram
 #'
-#' Calculates population-weighted experimental semivariograms from disease incidence rates. For now is only implemented in omnidirectional case.
+#' Calculates experimental population-weighted  semi-variograms from disease incidence rates.
+#' For now is only implemented in omnidirectional case.
 #'
 #' @param dfobj, string, name of list, output of function irates()
-#' @param lag, numeric, the lag distance used for variogram estimates
-#' @param nlags, numeric, the number of lags to calculate variogram
+#' @param lag, numeric, the lag distance used for semi-variogram estimates
+#' @param nlags, numeric, the number of lags to calculate semi-variogram
 #'
-#' @return The function returns a list with the variance and semivariogram estimates weighted by population size at nlags:
+#' @return The function returns a list with the variance and semi-variogram estimates weighted by population size at nlags:
 #' \item{weightsvar}{is the value of the weighted population variance}
 #' \item{semivar}{a dataframe with a vector of distances, a vector of experimental semivariogram values and number of pairs}
 #'
@@ -334,7 +342,7 @@ varexp = function(dfobj, lag, nlags){
   # store nr of observations
   nobs = nrow(dfobj[["rates"]])
 
-  # experimental variogram : get data
+  # experimental semi-variogram : get data
   rate = dfobj[["rates"]][,"rate"]
   ratexy = cbind(dfobj[["rates"]][c("x","y")])
   pop = dfobj[["rates"]][,"pop"]
@@ -361,7 +369,7 @@ varexp = function(dfobj, lag, nlags){
   # weighted sample variance
   wsvar = nwsv / dwsv
 
-  # experimental variogram : calc distances
+  # experimental semi-variogram : calc distances
   # lag distance
   lagd = lag
   # cut distance
@@ -377,7 +385,7 @@ varexp = function(dfobj, lag, nlags){
   # compute distance matrix
   matd = as.matrix(dist(ratexy))
 
-  # experimental variogram: create vectors to store results
+  # experimental semi-variogram: create vectors to store results
   # n pairs dist(h)
   nh = vector( mode = "integer", length = (lagn-1))
   # total dist(h)
@@ -391,7 +399,7 @@ varexp = function(dfobj, lag, nlags){
   # gamma(h)
   gammah = vector( mode = "double", length = (lagn-1))
 
-  # experimental variogram: compute
+  # experimental semi-variogram: compute
   for (k in 1:(lagn-1)) {
     for (i in 1:nobs) {
       for (j in 1:nobs) {
@@ -410,23 +418,23 @@ varexp = function(dfobj, lag, nlags){
   list(weightsvar = wsvar, semivar = v)
 }
 
-#' Fit a theoretical variogram to data
+#' Fit a theoretical semi-variogram to data
 #'
-#' Function fits (manually) a theoretical variogram.
-#' For now, the variogram model types available are spherical ('sph') and exponential ('exp').
-#' You should provide the experimental semivariogram, select a variogram model type and set the variogram parameters (nugget, range and sill).
-#' You may evaluate fit by visual inspection.
+#' Function fits (manually) a theoretical semi-variogram.
+#' For now, model types available are spherical ('sph') and exponential ('exp').
+#' Users should provide the experimental semi-variogram, fit a model type and set the semi-variogram parameters (nugget, range and sill).
+#' With base function plot(), results can be visualized.
 
 #' @param varexp, string, name of object, output of function `varexp()`
-#' @param mod, character, the variogram model type ('sph' or 'exp')
-#' @param nug, numeric, nugget-effect value of the variogram
-#' @param ran, numeric, range value of the variogram
-#' @param sill, numeric, sill (or partial sill) value of the variogram
+#' @param mod, character, the semi-variogram model type ('sph' or 'exp')
+#' @param nug, numeric, nugget-effect value of the semi-variogram
+#' @param ran, numeric, range value of the semi-variogram
+#' @param sill, numeric, sill (or partial sill) value of the semi-variogram
 #'
 #' @return Function returns the following list of objects:
 #' \item{structures}{the number of spatial strutures (excluding nugget-effect)}
 #' \item{parameters}{a dataframe with model information to be passed to ssdpars()}
-#' \item{fittedval}{a numeric vector of fitted values as set by the variogram model}
+#' \item{fittedval}{a numeric vector of fitted values as set by the semi-variogram model}
 #'
 #' @export
 varmodel = function (varexp, mod = c("exp","sph"), nug, ran , sill) {
@@ -475,7 +483,7 @@ varmodel = function (varexp, mod = c("exp","sph"), nug, ran , sill) {
 #' @return Function returns the following list of objects:
 #' \item{structures}{the number of spatial strutures (excluding nugget-effect)}
 #' \item{parameters}{a dataframe with model information to be passed to ssdpars()}
-#' \item{fittedval}{a numeric vector of fitted values as set by the variogram model}
+#' \item{fittedval}{a numeric vector of fitted values as set by the semi-variogram model}
 #'
 #' @details Both parameters file (.par) and simulations files (.out) are stored in input folder. Note that the simulation process may take a while, depending mostly on the number of simulation nodes and number of simulations specified.
 #'
@@ -768,7 +776,7 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
   cat("#        here we define the variogram to use. if more than 1, use [VARIOGRAM2]        #", file = fssd, sep = "\n", append = TRUE)
   cat("#-------------------------------------------------------------------------------------#", file = fssd, sep = "\n", append = TRUE)
 
-  # ------- ssdr.par: variogram models -------
+  # ------- ssdr.par: semi-variogram models -------
 
   for (j in 1 : nzones) {
     cat(paste0("[VARIOGRAMZ", j, "]"), file = fssd, sep = "\n", append = TRUE)
@@ -857,6 +865,10 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
   wd = getwd()
   parfile = paste0(day, "_", ssd_nameO)
   setwd("./input")
+  if(file.exists(parfile)) {
+    cat(paste0(parfile, " created."))
+  }
+
   system(paste0("./DSS.C.64.exe ", parfile))
   setwd(wd)
 
@@ -949,8 +961,13 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
      raster::projection(r) = sp::CRS(crsname)
 
      if(grids == TRUE){
-       raster::writeRaster(r, filename = paste0(folder,"/", day, "_", "sim", k), overwrite = TRUE)
+       gridname <- paste0(folder, "/", day, "_", "sim", k)
+       raster::writeRaster(r, filename = gridname, overwrite = TRUE)
+       if(file.exists(paste0(gridname, ".gri"))){
+         cat(gridname, ".gri (and .grd) created.")
+       }
      }
+
      # add layer to stack
      ssims = raster::stack(ssims, r)
      # change layer name
@@ -959,8 +976,16 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
    etype = raster::calc(ssims, fun = function(x) {quantile(x, probs = .5,na.rm=TRUE)})
    uncer = raster::calc(ssims, fun = sd, na.rm = TRUE)
    if (emaps == TRUE){
-     raster::writeRaster(etype, filename = paste0(folder, "/", day, "_", "medn"), overwrite = TRUE)
-     raster::writeRaster(uncer, filename = paste0(folder, "/", day, "_", "uncr"), overwrite = TRUE)
+     etypeName <- paste0(folder, "/", day, "_", "medn")
+     raster::writeRaster(etype, filename = etypeName, overwrite = TRUE)
+     if(file.exists(paste0(etypeName, ".gri"))){
+       cat(etypeName, ".gri (and .grd) created.")
+     }
+     uncrName <- paste0(folder, "/", day, "_", "uncr")
+     raster::writeRaster(uncer, filename = uncrName, overwrite = TRUE)
+     if(file.exists(paste0(uncrName, ".gri"))){
+       cat(uncrName, ".gri (and .grd) created.")
+     }
    }
    listmaps = list(simulations = ssims, etype = etype, uncertainty = uncer )
    return(listmaps)
