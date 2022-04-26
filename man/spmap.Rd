@@ -4,7 +4,7 @@
 \alias{spmap}
 \title{Creates elegant simulations, median e-type/uncertainty maps}
 \usage{
-spmap(mapobj = maps, mapvar = "etype", simid = 1, legname = NA)
+spmap(mapobj = maps, mapvar = "etype", simid = 1, legname = "")
 }
 \arguments{
 \item{mapobj}{string, name of list, output of function `outraster()`}
