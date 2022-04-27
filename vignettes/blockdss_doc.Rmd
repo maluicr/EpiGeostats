@@ -43,7 +43,7 @@ You may execute these actions manually or directly from your R console, running 
 
 ```{r, eval = F}
 # create folder input
-inp <- "./input/"
+inp <- "./input"
 if(!file.exists(inp)) dir.create(inp, recursive = TRUE)
 
 # download dss.c.64.exe.zip from github
