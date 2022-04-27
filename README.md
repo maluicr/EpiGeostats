@@ -28,7 +28,7 @@ if (!require("devtools")){
 
 # Example
 
-As an example, blockdss is used to map COVID-19 incidence in Portugal on 15 January 2021. After packages installation and dss.c.64.exe download, load `blockdss` and follow the example as presented in vignette :
+As an example, blockdss is used to map COVID-19 incidence in Portugal on 15 January 2021. After packages installation and dss.c.64.exe download, run the code below to load `blockdss` package and to follow the example, as presented in vignette:
 
 ```r
 # load blockdss 
