@@ -1,10 +1,10 @@
 ---
-title: "Documentation on blockdss"
+title: "Documentation on EpiGeostats"
 author: "Manuel Ribeiro"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Documentation on blockdss}
+  %\VignetteIndexEntry{Documentation on EpiGeostats}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,23 +16,23 @@ knitr::opts_chunk$set(
 )
 ```
 
-## blockdss
+## EpiGeostats
 
-blockdss R package generates geostatistical disease maps using block direct sequential simulation algorithm and provides visualization tools for effective analysis and communication of disease risk map results. 
+EpiGeostats R package generates geostatistical disease maps using block direct sequential simulation algorithm and provides visualization tools for effective analysis and communication of disease risk map results. 
 
 The package may also be used with mortality rates, or applied to other fields like ecology or criminology. 
 
 ## R wrapper
 
-blockdss R package is a wrapper for running a geostatistical software - dss.c.64.exe - to compute block direct sequential simulation algorithm, and for calling pixelate R package (https://github.com/aimeertaylor/pixelate) to plot spatial risk uncertainty in disease risk maps.
+EpiGeostats R package is a wrapper for running a geostatistical software - dss.c.64.exe - to compute block direct sequential simulation algorithm, and for calling pixelate R package (https://github.com/aimeertaylor/pixelate) to plot spatial risk uncertainty in disease risk maps.
 
-Details on the geostatistical algorithm used in blockdss are described in Azevedo et al (https://doi.org/10.1186/s12942-020-00221-5).
+Details on the geostatistical algorithm used in EpiGeostats are described in Azevedo et al (https://doi.org/10.1186/s12942-020-00221-5).
 
 The package provides convenient wrappers to set parameters required for geostatistical simulations and writes files in dss.c.64.exe readable format, after which block direct sequential simulation algorithm can be executed. Results generate a set of simulated disease risk, median risk and spatial uncertainty maps, and a pixelated single-map with disease risk and uncertainty, that can be extracted and/or plotted in R.
 
 ## Getting started
 
-The stand-alone software dss.c.64.exe is required to run blockdss. Therefore, the first step is to execute the following actions:
+The stand-alone software dss.c.64.exe is required to run EpiGeostats. Therefore, the first step is to execute the following actions:
 
 1. download dss.c.64.exe.zip from https://github.com/maluicr/dss,
 1. create a folder called "input" in the working directory,
@@ -63,24 +63,24 @@ if (!require("devtools")){
   }
   
   # install packages from GitHub
-  devtools::install_github("maluicr/blockdss", build_vignettes = TRUE, dependencies = TRUE)
+  devtools::install_github("maluicr/EpiGeostats", build_vignettes = TRUE, dependencies = TRUE)
   devtools::install_github("aimeertaylor/pixelate", build_vignettes = TRUE, dependencies = TRUE)
 ```
 
 ## Example
 
-As an example, we will show how to use blockdss to perform disease mapping of COVID-19 incidence and plot in a single-map disease risk and spatial risk uncertainty.
+As an example, we will show how to use EpiGeostats to perform disease mapping of COVID-19 incidence and plot in a single-map disease risk and spatial risk uncertainty.
 
-The input required to run blockdss R package are two datasets : 
+The input required to run EpiGeostats R package are two datasets : 
 
 1. block data, a data frame with incidence data (counts) per region,
 2. point data, a regular grid dataset with id region values at grid nodes.
 
-In this example, blockdss is used to map COVID-19 risk in Portugal on January 15, 2021. The covid dataset `ptdata` and the regular grid `ptgrid` comes with the package `blockdss`. The coordinate reference system is ETRS89 / Portugal TM06 (EPSG: 3763) and coordinates are in metres.
+In this example, EpiGeostats is used to map COVID-19 risk in Portugal on January 15, 2021. The covid dataset `ptdata` and the regular grid `ptgrid` comes with the package `EpiGeostats`. The coordinate reference system is ETRS89 / Portugal TM06 (EPSG: 3763) and coordinates are in metres.
 
 ```{r, warning = F, message = F}
 # load required libraries
-library(blockdss)
+library(EpiGeostats)
 library(sp)
 library(raster)
 

@@ -1030,7 +1030,7 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
    if (!require(gpclib)) install.packages("gpclib", type="source")
    maptools::gpclibPermit()
 
-   # prepare blockdss() maps for pixelate()
+   # prepare EpiGeostats() maps for pixelate()
    px_u <- raster::as.data.frame(mapobj[["uncertainty"]], row.names = NULL, optional = FALSE, xy = TRUE, na.rm = FALSE)
    px_m <- raster::as.data.frame(mapobj[["etype"]] , row.names = NULL, optional = FALSE, xy = TRUE, na.rm = FALSE)
    px_in <- cbind(px_m, px_u[,3])

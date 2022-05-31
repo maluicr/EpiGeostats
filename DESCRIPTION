@@ -1,4 +1,4 @@
-Package: blockdss
+Package: EpiGeostats
 Type: Package
 Title: Disease mapping with block direct sequential simulation
 Version: 0.2.1.1
@@ -8,8 +8,8 @@ Maintainer: Manuel Ribeiro <manuel.ribeiro@tecnico.ulisboa.pt>
 Description: The package provides simple syntax for disease risk mapping with geostatistical simulations.Highly-resolved maps of median disease risk and associated uncertainty are derived. A single-map combining both elements can be extracted and plotted.Runs block direct sequential simulation algortihm and uses population-weighted semi-variogram functions to solve the block kriging equations.  
 Depends: R (>= 3.6.0)
 License: MIT + file LICENSE
-URL: https://github.com/maluicr/blockdss
-BugReports: https://github.com/maluicr/blockdss/issues
+URL: https://github.com/maluicr/EpiGeostats
+BugReports: https://github.com/maluicr/EpiGeostats/issues
 Encoding: UTF-8
 LazyData: true
 Imports:
