@@ -1087,6 +1087,7 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
  spmap = function(mapobj = maps, mapvar = "etype", simid = 1, legname = ""){
 
    m <- mapvar
+
    if(m == "simulations"){
      id <- simid
      if(dim(mapobj[["simulations"]])[3] < id){stop("simid > number of simulations")}
@@ -1107,20 +1108,34 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
    # assign new names to data.frame columns
    names(px_in) <- c("x", "y", "z")
 
-   # Plot map with ggplot
-   ggplot2::ggplot(px_in) +
-     # Add raster surface
-     ggplot2::geom_raster(mapping = ggplot2::aes(x = x, y = y, fill = z)) +
-     # Add gradient
-     ggplot2::scale_fill_viridis_c(name = legname, na.value = 'white') +
+   # color pallete
+   if (m == "uncertainty"){
 
-     # Add axis labels
+     colmap <- "ggplot2::scale_fill_viridis_c(option = 'inferno', name = legname, na.value = 'white') + "
+   } else {
+     colmap <- "ggplot2::scale_fill_viridis_c(name = legname, na.value = 'white') +"
+   }
+
+   # Plot map with ggplot
+   p <- ggplot2::ggplot(px_in) +
+     # Add raster surface
+     ggplot2::geom_raster(mapping = ggplot2::aes(x = x, y = y, fill = z))
+
+   # Add gradient
+   if (m == "uncertainty"){
+     px <- p +
+       ggplot2::scale_fill_viridis_c(option = 'inferno', name = legname, na.value = 'white')
+   } else {
+     px <- p +
+       ggplot2::scale_fill_viridis_c(option = 'viridis', name = legname, na.value = 'white')
+   }
+
+   # Add axis labels
+   px +
      ggplot2::ylab('Y') +
      ggplot2::xlab('X') +
-
      # Ensure the plotting space is not expanded
      ggplot2::coord_fixed(expand = FALSE) +
-
      # Modify the legend and add a plot border:
      ggplot2::theme(legend.justification = c(0, 0),
                     legend.position = c(1,0),
