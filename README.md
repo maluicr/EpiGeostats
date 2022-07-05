@@ -12,17 +12,42 @@ The package provides convenient wrappers to set parameters required for geostati
 
 # Getting started
 
-1. go to https://github.com/maluicr/dss and download dss.c.64.exe (follow the download instructions)
-2. install required packages using the following code (please accept any suggested package updates): 
+To run the EpiGeostats R package for the first time, three steps must be checked first:
 
+1. if not installed, install `Rtools` software and `devtools` package:  
 ```r
+# install Rtools from CRAN
+if (!require("installr")){
+    install.packages("installr")
+    }
+
+install.Rtools()
+
 # install devtools from CRAN
 if (!require("devtools")){
-  install.packages("devtools")
-  }
-  
+    install.packages("devtools")
+    }
+``` 
+
+2. go to https://github.com/maluicr/dss and download dss.c.64.exe :
+```r
+# create folder input
+inp <- "./input"
+if(!file.exists(inp)) dir.create(inp, recursive = TRUE)
+
+# download dss.c.64.exe.zip from github
+gitURL <- "https://github.com/maluicr/dss/raw/main/DSS.C.64.exe.zip"
+utils::download.file(url = gitURL, destfile = file.path(inp, "DSS.C.64.exe.zip"))
+
+# unzip file
+unzip(file.path(inp, "DSS.C.64.exe.zip"), exdir = inp)
+``` 
+
+3. install required packages using the following code (please accept any suggested package updates): 
+
+```r
   # install packages from GitHub
-  devtools::install_github("maluicr/EpiGeostats", build_vignettes = TRUE, dependencies = TRUE)
+  devtools::install_github("maluicr/EpiGeostats", build_vignettes = TRUE, dependencies = TRUE, upgrade = "always")
   devtools::install_github("aimeertaylor/pixelate", build_vignettes = TRUE, dependencies = TRUE)
 ```
 
