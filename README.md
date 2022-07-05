@@ -12,16 +12,16 @@ The package provides convenient wrappers to set parameters required for geostati
 
 # Getting started
 
-To run the EpiGeostats R package for the first time, three steps must be checked first:
+To run the EpiGeostats R package for the first time, you must run three steps with the following code:
 
-1. if not installed, install `Rtools` software and `devtools` package:  
+1. if not installed, installs `Rtools` software and `devtools` package:  
 ```r
 # install Rtools from CRAN
 if (!require("installr")){
     install.packages("installr")
     }
 
-install.Rtools()
+installr::install.Rtools()
 
 # install devtools from CRAN
 if (!require("devtools")){
@@ -29,7 +29,7 @@ if (!require("devtools")){
     }
 ``` 
 
-2. go to https://github.com/maluicr/dss and download dss.c.64.exe :
+2. downloads dss.c.64.exe from GitHub:
 ```r
 # create folder input
 inp <- "./input"
@@ -43,7 +43,7 @@ utils::download.file(url = gitURL, destfile = file.path(inp, "DSS.C.64.exe.zip")
 unzip(file.path(inp, "DSS.C.64.exe.zip"), exdir = inp)
 ``` 
 
-3. install required packages using the following code (please accept any suggested package updates): 
+3. installs required packages from GitHub (please accept any suggested package updates): 
 
 ```r
   # install packages from GitHub
