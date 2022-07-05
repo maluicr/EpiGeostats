@@ -1,12 +1,12 @@
 Package: EpiGeostats
 Type: Package
 Title: Disease Mapping with Block Direct Sequential Simulation
-Version: 0.2.1.2
+Version: 0.3
 Authors@R:
     person(given = "Manuel", family = "Ribeiro", email = "manuel.ribeiro@tecnico.ulisboa.pt", role = c("aut", "cre"))
 Maintainer: Manuel Ribeiro <manuel.ribeiro@tecnico.ulisboa.pt>
 Description: The package provides simple syntax for disease risk mapping with geostatistical simulations. Highly-resolved maps of median disease risk and associated uncertainty are derived. A single-map combining both elements can be extracted and plotted. Runs block direct sequential simulation algorithm and uses population-weighted semi-variogram functions to solve the block kriging equations.  
-Depends: R (>= 4.4.1)
+Depends: R (>= 4.1)
 License: MIT + file LICENSE
 URL: https://github.com/maluicr/EpiGeostats
 BugReports: https://github.com/maluicr/EpiGeostats/issues
@@ -18,14 +18,14 @@ Imports:
     rgdal (>= 1.5-28),
     sp (>= 1.4-6),
     ggplot2 (>= 3.2.1),
-    devtools,
-    maptools,
-    gpclib
+    maptools
 Suggests: 
     markdown,
     knitr (>= 1.24),
     rmarkdown (>= 1.15),
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    devtools,
+    gpclib
 Remotes: github::aimeertaylor/pixelate
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
