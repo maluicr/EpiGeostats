@@ -70,7 +70,6 @@ unzip(file.path(inp, "DSS.C.64.exe.zip"), exdir = inp)
 Then, install the required packages using the following code: 
 
 ```{r, eval = F}
-
 # install devtools from CRAN
 if (!require("devtools")){
   install.packages("devtools")
