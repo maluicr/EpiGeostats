@@ -32,16 +32,29 @@ The package provides convenient wrappers to set parameters required for geostati
 
 ## Getting started
 
-The stand-alone software dss.c.64.exe is required to run EpiGeostats. Therefore, the first step is to execute the following actions:
+The installation of EpiGeostats needs compilation, hence it requires to have Rtools in the system. Moreover, the stand-alone software dss.c.64.exe is required to run EpiGeostats. Therefore, two prior steps are required to run EpiGeostats for the first time:
 
-1. download dss.c.64.exe.zip from https://github.com/maluicr/dss,
-1. create a folder called "input" in the working directory,
-2. add the zipped dss.c.64.exe inside,
-3. unzip the file into the same folder.
+1. download Rtools and run the installer (select the default options),
+2. download dss.c.64.exe.
 
-You may execute these actions manually or directly from your R console, running the following code:
+After downloading dss.c.64.exe from https://github.com/maluicr/dss, create a folder called “input” in the working directory, add the zipped dss.c.64.exe.zip inside and unzip the file into the same folder.
 
+You may execute these actions from your R console, running the following code:
 ```{r, eval = F}
+# -----------------------------------------
+# Step 1, if not installed, installs Rtools
+# -----------------------------------------
+
+# check if Rtools software is installed. if not, download and install from CRAN.
+if (!require("installr")){install.packages("installr")}
+
+# select the default options when installing
+installr::install.Rtools(check_r_update = F)
+
+# -----------------------------------------
+# Step 2, download dss.c.64.exe from GitHub
+# -----------------------------------------
+
 # create folder input
 inp <- "./input"
 if(!file.exists(inp)) dir.create(inp, recursive = TRUE)
@@ -50,13 +63,14 @@ if(!file.exists(inp)) dir.create(inp, recursive = TRUE)
 gitURL <- "https://github.com/maluicr/dss/raw/main/DSS.C.64.exe.zip"
 utils::download.file(url = gitURL, destfile = file.path(inp, "DSS.C.64.exe.zip"))
 
-# unzip file
+# unzip file into 'input' folder
 unzip(file.path(inp, "DSS.C.64.exe.zip"), exdir = inp)
 ```
 
 Then, install the required packages using the following code: 
 
 ```{r, eval = F}
+
 # install devtools from CRAN
 if (!require("devtools")){
   install.packages("devtools")
@@ -66,6 +80,8 @@ if (!require("devtools")){
   devtools::install_github("maluicr/EpiGeostats", build_vignettes = TRUE, dependencies = TRUE)
   devtools::install_github("aimeertaylor/pixelate", build_vignettes = TRUE, dependencies = TRUE)
 ```
+
+You should now be ready to go.
 
 ## Example
 
