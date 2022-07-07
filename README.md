@@ -64,6 +64,8 @@ if (!require("devtools")){
 
 You should now be ready to go.
 
+**NOTE**: EpiGeostats comes with a vignette which relies on Pandoc to compile the document. Unless you are using RStudio IDE (which has a bundled version of Pandoc), you will need to install Pandoc (https://pandoc.org/installing.html). 
+
 # Example
 
 As an example, EpiGeostats is used to map COVID-19 incidence in Portugal on 15 January 2021. After packages installation and dss.c.64.exe download, load `EpiGeostats` package and follow the example, as presented in vignette:
