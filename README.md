@@ -12,16 +12,16 @@ The package provides convenient wrappers to set parameters required for geostati
 
 # Getting started
 
+EpiGeostats comes with a vignette which relies on Pandoc to compile the document. If you are using RStudio IDE (which has a bundled version of Pandoc) no action is required for vignette compilation. Otherwise, you will need to install Pandoc (https://pandoc.org/installing.html). 
+
 The installation of EpiGeostats needs compilation, hence it requires to have Rtools in the system. Moreover, the stand-alone software dss.c.64.exe is required to run EpiGeostats. Therefore, two prior steps are required to run EpiGeostats for the first time:
 
-1. download Rtools and run the installer (select the default options),
-2. download dss.c.64.exe.
+1. download Rtools and run the installer (select the default options)
+2. download dss.c.64.exe
 
-After downloading dss.c.64.exe from https://github.com/maluicr/dss, create a folder called “input” in the working directory, add the zipped dss.c.64.exe.zip inside and unzip the file into the same folder.
+You may execute these actions from your R console running the code below. This code will also create a folder in the working directory named 'input', where dss.c.64.exe will be stored. All files written with EpiGeostats functions will also be stored in that same folder.
 
-You may execute these actions from your R console, running the following code:
 ```{r, eval = F}
-
 # -----------------------------------------
 # Step 1, if not installed, installs Rtools
 # -----------------------------------------
@@ -63,8 +63,6 @@ if (!require("devtools")){
 ```
 
 You should now be ready to go.
-
-**NOTE**: EpiGeostats comes with a vignette which relies on Pandoc to compile the document. Unless you are using RStudio IDE (which has a bundled version of Pandoc), you will need to install Pandoc (https://pandoc.org/installing.html). 
 
 # Example
 
