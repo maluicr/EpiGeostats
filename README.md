@@ -75,3 +75,7 @@ library(EpiGeostats)
 # see vignette document
 help(package = "EpiGeostats")
 ```
+
+# Acknowledgements
+
+Thanks to Alzira Ramos and António Rodríguez-Lizana for helping testing the package and for valuable comments; To the Portuguese Directorate-General of Health (DGS) for providing the data related to COVID-19 cases included in the package; Manuel Ribeiro is supported by Fundação para a Ciência e Tecnologia with research contract(IF2018/CP1384/IST-ID/175/2018).
