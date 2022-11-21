@@ -977,8 +977,10 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
      # change layer name
      names(ssims[[k]]) = paste0("sim", k)
    }
-   etype = raster::calc(ssims, fun = function(x) {quantile(x, probs = .5,na.rm=TRUE)})
+   etype = raster::calc(ssims, fun = function(x) {quantile(x, probs = .5, na.rm = TRUE)})
    uncer = raster::calc(ssims, fun = sd, na.rm = TRUE)
+   iqrng = raster::calc(ssims, fun = function(x) {quantile(x, probs = .75, na.rm = TRUE) - quantile(x, probs = .25, na.rm = TRUE)})
+   etypm = raster::calc(ssims, fun = mean, na.rm = TRUE)
    if (emaps == TRUE){
      etypeName <- paste0(folder, "/", day, "_", "medn")
      raster::writeRaster(etype, filename = etypeName, overwrite = TRUE)
@@ -990,8 +992,18 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
      if(file.exists(paste0(uncrName, ".gri"))){
        cat(uncrName, ".gri (and .grd) created.")
      }
+     iqrngName <- paste0(folder, "/", day, "_", "iqrng")
+     raster::writeRaster(iqrng, filename = iqrngName, overwrite = TRUE)
+     if(file.exists(paste0(iqrngName, ".gri"))){
+       cat(iqrngName, ".gri (and .grd) created.")
+     }
+     etypmName <- paste0(folder, "/", day, "_", "mean")
+     raster::writeRaster(etypm, filename = etypmName, overwrite = TRUE)
+     if(file.exists(paste0(etypmName, ".gri"))){
+       cat(etypmName, ".gri (and .grd) created.")
+     }
    }
-   listmaps = list(simulations = ssims, etype = etype, uncertainty = uncer )
+   listmaps = list(simulations = ssims, etype = etype, uncertainty = uncer, iqrange = iqrng, etypemean = etypm)
    return(listmaps)
    }
 
@@ -1031,7 +1043,7 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
    maptools::gpclibPermit()
 
    # prepare EpiGeostats() maps for pixelate()
-   px_u <- raster::as.data.frame(mapobj[["uncertainty"]], row.names = NULL, optional = FALSE, xy = TRUE, na.rm = FALSE)
+   px_u <- raster::as.data.frame(mapobj[["iqrange"]], row.names = NULL, optional = FALSE, xy = TRUE, na.rm = FALSE)
    px_m <- raster::as.data.frame(mapobj[["etype"]] , row.names = NULL, optional = FALSE, xy = TRUE, na.rm = FALSE)
    px_in <- cbind(px_m, px_u[,3])
    names(px_in) <- c("x", "y", "z", "u")
@@ -1114,7 +1126,7 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
      ggplot2::geom_raster(mapping = ggplot2::aes(x = x, y = y, fill = z))
 
    # Add gradient
-   if (m == "uncertainty"){
+   if (m == "uncertainty" | m == "iqrange"){
      px <- p +
        ggplot2::scale_fill_viridis_c(option = 'inferno', name = legname, na.value = 'white')
    } else {
@@ -1135,3 +1147,4 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
                     legend.title = ggplot2::element_text(size = 10),
                     legend.text = ggplot2::element_text(size = 10))
  }
+
