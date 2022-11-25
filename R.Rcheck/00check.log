@@ -1,0 +1,8 @@
+* using log directory 'Z:/pos_doc/pkg/EpiGeostats/R.Rcheck'
+* using R version 4.1.1 (2021-08-10)
+* using platform: x86_64-w64-mingw32 (64-bit)
+* using session charset: ISO8859-1
+* checking for file 'R/DESCRIPTION' ... ERROR
+File DESCRIPTION does not exist
+* DONE
+Status: 1 ERROR
