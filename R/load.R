@@ -59,7 +59,7 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
   dfobj[, ic] = base::ifelse(is.na(dfobj[, ic]), casesNA, dfobj[, ic])
 
   # recalculate crude rates
-  rate = phab * dfobj[, ic] / dfobj[, ip]
+  rate = round(phab * dfobj[, ic] / dfobj[, ip],6)
 
   tab = data.frame (dfobj[, ioid], x = dfobj[, ix], y = dfobj[, iy], z = dfobj[, iz], rate, error)
 
@@ -115,8 +115,8 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
   ycol = grep("y", colnames(tabnotf))
   zcol = grep("z", colnames(tabnotf))
   varcol = grep("rate", colnames(tabnotf))
-  minval = min(tabnotf$rate)
-  maxval = max(tabnotf$rate)
+  minval = round(min(round(tabnotf$rate,6)),6)
+  maxval = round(max(round(tabnotf$rate,6)),6)
 
   # return data.frame object for semi- calcs
   tabvgm = data.frame (id = dfobj[, ioid], x = dfobj[, ix], y = dfobj[, iy],
