@@ -191,7 +191,7 @@ lines(vmod[["fittedval"]])
 Function `ssdpars()` generates a parameters file (.par) and invokes dss.c.64.exe to run block direct sequential simulation.
 
 ```{r fun ssdir, eval = F}
-ssdpars(blockobj = block, maskobj = mask, dfobj = inc, varmobj = vmod, 
+ssdpars(grdobj = gnode, maskobj = mask, dfobj = inc, varmobj = vmod, 
         simulations = 5, radius1 = 35000, radius2 = 35000)
 ```
 
