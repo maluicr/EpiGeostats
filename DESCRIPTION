@@ -15,18 +15,15 @@ LazyData: true
 Imports:
     data.table (>= 1.9.4),
     raster (>= 3.5-15),
-    rgdal (>= 1.5-28),
     sp (>= 1.4-6),
-    ggplot2 (>= 3.2.1),
-    maptools
+    ggplot2 (>= 3.2.1)
 Suggests: 
     markdown,
     knitr (>= 1.24),
     rmarkdown (>= 1.15),
     testthat (>= 3.0.0),
-    devtools,
-    gpclib
+    devtools
 Remotes: github::aimeertaylor/pixelate
-RoxygenNote: 7.2.0
+RoxygenNote: 7.3.3
 VignetteBuilder: knitr
 Config/testthat/edition: 3

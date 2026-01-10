@@ -1041,9 +1041,6 @@ ssdpars = function (grdobj, maskobj, dfobj, varmobj, simulations = 1, nrbias = 2
      devtools::install_github(repo = "aimeertaylor/pixelate", build_vignettes = TRUE, force = TRUE)
    }
 
-   if (!require(gpclib)) install.packages("gpclib", type="source")
-   maptools::gpclibPermit()
-
    # prepare EpiGeostats() maps for pixelate()
    px_u <- raster::as.data.frame(mapobj[["iqrange"]], row.names = NULL, optional = FALSE, xy = TRUE, na.rm = FALSE)
    px_m <- raster::as.data.frame(mapobj[["etype"]] , row.names = NULL, optional = FALSE, xy = TRUE, na.rm = FALSE)
