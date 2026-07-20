@@ -13,6 +13,7 @@ BugReports: https://github.com/maluicr/EpiGeostats/issues
 Encoding: UTF-8
 LazyData: true
 Imports:
+    utils,
     data.table (>= 1.9.4),
     raster (>= 3.5-15),
     sp (>= 1.4-6),
