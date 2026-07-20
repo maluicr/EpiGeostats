@@ -147,8 +147,8 @@ irates = function(dfobj = NA, oid = NA, xx = NA, yy = NA, zz = NA,
 #'
 #' @details The gridded values should refer to the region id's at simulation locations (nodes). Every regions recorded in disease data file should be assigned to 1 or more grid node.
 #'
-#'
 #' @importFrom raster res extent as.matrix
+#' @importFrom utils stack
 #'
 #' @export
 grdfile = function (rateobj, gridimage, NAval = -999){
@@ -178,7 +178,7 @@ grdfile = function (rateobj, gridimage, NAval = -999){
 
   # convert to vector str
   matA3 = as.data.frame(t(matA2))
-  stac3 = raster::stack(matA3)
+  stac3 = utils::stack(matA3)
   stacf = stac3$values
 
   # set NAs values
