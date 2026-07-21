@@ -1,7 +1,7 @@
 Package: EpiGeostats
 Type: Package
 Title: Disease Mapping with Block Direct Sequential Simulation
-Version: 0.3
+Version: 0.4
 Authors@R:
     person(given = "Manuel", family = "Ribeiro", email = "manuel.ribeiro@tecnico.ulisboa.pt", role = c("aut", "cre"))
 Maintainer: Manuel Ribeiro <manuel.ribeiro@tecnico.ulisboa.pt>
@@ -13,7 +13,6 @@ BugReports: https://github.com/maluicr/EpiGeostats/issues
 Encoding: UTF-8
 LazyData: true
 Imports:
-    utils,
     data.table (>= 1.9.4),
     raster (>= 3.5-15),
     sp (>= 1.4-6),
